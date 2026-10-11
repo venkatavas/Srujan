@@ -1,0 +1,303 @@
+/* 04 Leadership — three perspectives, one decision (the client's reference image).
+   Owned by components/site/Leadership.tsx; imported after globals.css and chrome.css.
+   Desktop is one viewport-height composition laid out in fractions of the section, as measured
+   from the reference (1672 × 941): copy at the left, the instrument centred on the decision at
+   (51.7%, 49.5%), the timeline at 82%. Nothing here hides content: draw.ts sets the from-states,
+   so reduced motion and no-JS read the final drawing. */
+
+.tile--leadership {
+  /* One unit that tracks the viewport height at 16:9 and the width when the screen is narrower. */
+  --u: min(1svh, 0.5625vw);
+  /* The instrument square: 0.84 of the viewport height in the reference. */
+  --ls: clamp(560px, calc(84 * var(--u)), 1160px);
+}
+
+/* ── Copy ─────────────────────────────────────────────── */
+
+.tile--leadership .split {
+  grid-template-columns: minmax(0, calc(33vw - var(--pad-x)));
+  padding-top: clamp(16px, 3svh, 40px);
+  /* Lifts the copy's centre onto the instrument's (49.5%) above the journey row. */
+  padding-bottom: clamp(56px, 11svh, 132px);
+}
+.tile--leadership .split__copy {
+  position: relative;
+  z-index: 2;
+}
+.tile--leadership .lead__h {
+  /* Set by the column, not by ch: at 3vw the reference's five lines (Good decisions / happen
+     when / different / perspectives become / one direction.) hold from 1366 to 1920 wide. */
+  max-width: none;
+  font-size: clamp(32px, min(3vw, 5.6svh), 58px);
+  line-height: 1.08;
+  color: #fff;
+}
+.tile--leadership .lead__body {
+  margin-top: clamp(20px, 3svh, 30px);
+  font-size: 13.5px;
+}
+.tile--leadership .split__copy .btn {
+  margin-top: clamp(26px, 4.2svh, 40px);
+}
+
+/* ── The board: instrument + timeline, one plane (drift moves it as the diagram column) ── */
+
+.lship__board {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+.lship__frame {
+  position: absolute;
+  left: 51.7%;
+  top: 49.5%;
+  width: var(--ls);
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+}
+.lship__crop,
+.lship__stage,
+.lship__instrument {
+  position: absolute;
+  inset: 0;
+}
+
+/* The faint rings (shared <Rings>); its axis is redrawn below so it can break for a label. */
+.lship__rings {
+  inset: 0;
+}
+.lship__rings .rings__axis {
+  display: none;
+}
+.lship__specks {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+.lship__specks circle {
+  fill: rgb(255 255 255 / 0.32);
+}
+
+/* ── The Venn ─────────────────────────────────────────── */
+
+.lship__venn.dia {
+  position: absolute;
+  inset: 0;
+}
+.lship__wires {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+.lship__axis,
+.lship__level,
+.lship__circle {
+  fill: none;
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+.lship__axis {
+  stroke: rgb(255 255 255 / 0.13);
+}
+.lship__level {
+  stroke: rgb(255 255 255 / 0.3);
+  stroke-dasharray: 1 5;
+}
+.lship__circle {
+  stroke: rgb(255 255 255 / 0.36);
+}
+
+/* A perspective: icon, name, and what it asks. Sized with the drawing (cqw). */
+.lship__view {
+  display: grid;
+  justify-items: center;
+  font-size: max(9.5px, 1.56cqw);
+  line-height: 1.62;
+  text-align: center;
+}
+.lship__icon {
+  width: max(16px, 2.5cqw);
+  height: max(16px, 2.5cqw);
+  margin-bottom: 0.75em;
+  color: rgb(255 255 255 / 0.88);
+}
+.lship__label {
+  margin-bottom: 0.5em;
+  font-size: 1.05em;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #fff;
+}
+.lship__view ul {
+  display: grid;
+  justify-items: start;
+  text-align: left;
+  color: var(--mute);
+}
+.lship__view li i,
+.lship__step-h span {
+  font-style: normal;
+}
+.lship__view li i {
+  margin-right: 0.75em;
+  color: var(--accent);
+}
+
+/* The decision: where all three overlap. */
+.lship__decision {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow:
+    0 0 0 4px rgb(224 69 43 / 0.16),
+    0 0 20px 4px rgb(224 69 43 / 0.5);
+}
+.lship__decision::before {
+  content: '';
+  position: absolute;
+  inset: -30px;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgb(224 69 43 / 0.22), transparent);
+}
+
+/* ── The timeline: 01 → 03 down a dotted line ─────────── */
+
+.lship__steps {
+  --fs: clamp(11px, calc(1.34 * var(--u)), 14.5px);
+  --gap: calc(var(--fs) * 3.1);
+  --mark: 0.85em; /* the marker's centre: the middle of the first line */
+  position: absolute;
+  left: 82%;
+  right: var(--pad-x);
+  top: 52.5%;
+  transform: translateY(-50%);
+  font-size: var(--fs);
+  line-height: 1.82;
+}
+.lship__step {
+  position: relative;
+  padding-left: max(20px, 1.5vw);
+}
+.lship__step + .lship__step {
+  margin-top: var(--gap);
+}
+/* The dotted line from this marker down to the next. */
+.lship__step:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  left: -0.5px;
+  top: var(--mark);
+  bottom: calc(-1 * var(--gap) - var(--mark));
+  width: 1px;
+  background: linear-gradient(to bottom, rgb(255 255 255 / 0.42) 1px, transparent 1px) 0 0 / 1px 4px repeat-y;
+}
+.lship__step > i {
+  position: absolute;
+  left: 0;
+  top: var(--mark);
+  z-index: 1;
+  width: 9px;
+  height: 9px;
+  border: 1px solid rgb(255 255 255 / 0.55);
+  border-radius: 50%;
+  background: var(--ink);
+  transform: translate(-50%, -50%);
+}
+.lship__step.is-decision > i {
+  width: 11px;
+  height: 11px;
+  border-color: var(--accent);
+  background: var(--accent);
+  box-shadow:
+    0 0 0 3px rgb(224 69 43 / 0.16),
+    0 0 14px 2px rgb(224 69 43 / 0.5);
+}
+.lship__step-h {
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #fff;
+}
+.lship__step-h span {
+  display: inline-block;
+  width: 2.6em;
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  color: var(--mute);
+}
+.lship__step.is-decision .lship__step-h,
+.lship__step.is-decision .lship__step-h span {
+  color: var(--accent);
+}
+.lship__step ul,
+.lship__step-t {
+  margin-top: 0.45em;
+  padding-left: 2.6em;
+  color: var(--mute);
+}
+.lship__step-t {
+  max-width: 24ch;
+}
+
+/* ── Smaller screens: copy, the Venn (cropped to its circles), the timeline ── */
+
+@media (max-width: 900px) {
+  .tile--leadership .split {
+    grid-template-columns: minmax(0, 1fr);
+    padding-bottom: 0;
+  }
+  .lship__board {
+    position: static;
+    display: grid;
+    gap: 44px;
+    pointer-events: auto;
+  }
+  .lship__frame {
+    position: relative;
+    left: auto;
+    top: auto;
+    width: auto;
+    aspect-ratio: auto;
+    transform: none;
+  }
+  /* The circles span x 150–850, y 215–865 of the square: show that window, at least 480px
+     wide so the labels stay readable (it scrolls sideways below that). */
+  .lship__crop {
+    position: relative;
+    inset: auto;
+    width: clamp(480px, 100%, 620px);
+    aspect-ratio: 700 / 650;
+    margin: 0 auto;
+    overflow: clip;
+  }
+  .lship__stage {
+    inset: auto;
+    left: -21.43%;
+    top: -33.08%;
+    width: 142.86%;
+    aspect-ratio: 1;
+  }
+  .lship__instrument,
+  .lship__axis,
+  .lship__level {
+    display: none;
+  }
+  .lship__steps {
+    position: static;
+    margin-left: 6px;
+    transform: none;
+  }
+}
+@media (min-width: 540px) and (max-width: 900px) {
+  /* Wide enough to show the whole Venn: no "more to the right" fade. */
+  .lship__frame.scroll-x {
+    mask-image: none;
+  }
+}

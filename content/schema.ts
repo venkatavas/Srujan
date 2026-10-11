@@ -18,7 +18,7 @@ export const pending = <T = string>(note: string, requiredForLaunch = false): Fa
   requiredForLaunch,
 })
 
-export const has = <T>(f: Fact<T>): f is Extract<Fact<T>, { value: T }> => f.status !== 'pending'
+const has = <T>(f: Fact<T>): f is Extract<Fact<T>, { value: T }> => f.status !== 'pending'
 export const valueOf = <T>(f: Fact<T>): T | undefined => (has(f) ? f.value : undefined)
 
 // Placeholders are visible locally and on preview deployments, never in production.
@@ -26,7 +26,7 @@ export const SHOW_PENDING = process.env.VERCEL_ENV !== 'production'
 
 export const SRC = {
   client: { label: 'Provided by Sai Srujan Pasala' },
-  brief: { label: 'Provided by Sai Srujan Pasala' },
+  linkedin: { label: 'LinkedIn experience, provided by the client', accessed: '2026-10-07' },
   tracxnFloryn: {
     label: 'Tracxn — Floryn Health Private Limited',
     url: 'https://tracxn.com/d/legal-entities/india/floryn-health-private-limited/__c_-cUH3K8okPUoWQOz93WnVG1G7Hyq0dfcNWcBD6QPI',
@@ -35,11 +35,6 @@ export const SRC = {
   playFeedec: {
     label: 'Google Play — Feedec',
     url: 'https://play.google.com/store/apps/details?id=co.feedec.app&hl=en_US',
-    accessed: '2026-10-06',
-  },
-  internshalaFeedec: {
-    label: 'Internshala — Feedec company profile',
-    url: 'https://internshala.com/company/feedec-1755171818/',
     accessed: '2026-10-06',
   },
 } satisfies Record<string, Source>

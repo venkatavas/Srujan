@@ -1,0 +1,444 @@
+/* 06 Experience — a career of expanding impact (the client's reference image, 1672 × 941).
+   Owned by components/site/Experience.tsx; imported after globals.css and chrome.css.
+   Composition in % of the section: header at ~17% of the height, copy at 5–30% of the width,
+   the stage at 34–96%: group labels from ~27%, the curve through ~40–52%, the role cards
+   ~54–78%; the journey row and the closing line at the foot. The stage is a size container
+   1000 units wide, so 1cqw = 10 units: type and spacing scale with the wires they sit on.
+   Nothing here hides content: draw.ts sets the from-states, so reduced motion and no-JS read
+   the final drawing. */
+
+/* ── Frame ─────────────────────────────────────────────── */
+
+.tile--experience {
+  /* One unit that tracks the viewport height at 16:9 and the width when the screen is narrower. */
+  --u: min(1svh, 0.5625vw);
+  /* The header sits lower than the shared 104px, as drawn (≈17% of the height). */
+  padding-top: clamp(104px, 15.5svh, 184px);
+  /* Rings, the meridian and the curve's tails stay inside the section. */
+  overflow: clip;
+}
+
+/* Copy 5–30%, gap 30–34%, stage 34–96% of the section: inside the header's gutter, the
+   content box runs 5% → 96% (91 parts: 25 · 4 · 62). The bottom padding keeps the journey
+   row and the closing line (absolute, chrome.css) clear. */
+.tile--experience .split.xp {
+  position: relative;
+  z-index: 1;
+  grid-template-columns: minmax(0, 25fr) minmax(0, 62fr);
+  gap: 0 4.396%;
+  align-items: center;
+  margin-left: max(0px, calc(5vw - var(--pad-x)));
+  margin-right: max(0px, calc(4vw - var(--pad-x)));
+  padding: clamp(16px, 2.6svh, 34px) 0 clamp(76px, 11svh, 132px);
+}
+
+/* ── Copy ─────────────────────────────────────────────── */
+
+.tile--experience .lead__h {
+  /* Six lines, as drawn: From building to / communicating to / analysing and advising — /
+     a consistent focus on / solving meaningful / problems. */
+  max-width: 11.4em;
+  font-size: clamp(28px, 2.25vw, 40px);
+  font-variation-settings: 'opsz' 48;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  color: #fff;
+}
+.tile--experience .lead__body {
+  max-width: 34ch;
+  margin-top: clamp(18px, 2.8svh, 28px);
+  font-size: 13.5px;
+}
+.tile--experience .split__copy .btn {
+  margin-top: clamp(28px, 5.4svh, 56px);
+}
+/* Inactive until the link is added: dimmed by colour, not opacity (the entrance animates the
+   button's opacity), and no hover response. */
+.tile--experience .btn[aria-disabled='true'] {
+  border-color: rgb(226 232 255 / 0.09);
+  color: rgb(232 230 225 / 0.4);
+  cursor: not-allowed;
+}
+.tile--experience .btn[aria-disabled='true'] span {
+  transform: none;
+}
+
+/* ── Background: rings, crosses ───────────────────────── */
+
+/* Faint concentric arcs centred at (57%, 47%) of the section; mostly cropped by its edges. */
+.xp-rings {
+  left: 57%;
+  top: 47%;
+  width: calc(150 * var(--u));
+  transform: translate(-50%, -50%);
+}
+.xp-rings .rings__axis {
+  display: none;
+}
+
+.xp-cross {
+  position: absolute;
+  z-index: 0;
+  width: 11px;
+  height: 11px;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+.xp-cross::before,
+.xp-cross::after {
+  content: '';
+  position: absolute;
+  background: rgb(224 69 43 / 0.85);
+}
+.xp-cross::before {
+  left: 5px;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+}
+.xp-cross::after {
+  top: 5px;
+  left: 0;
+  right: 0;
+  height: 1px;
+}
+.xp-cross--a {
+  left: 24.8%;
+  top: 76%;
+}
+.xp-cross--b {
+  left: 93.5%;
+  top: 26%;
+}
+
+/* ── The stage ────────────────────────────────────────── */
+
+.xp-stage {
+  position: relative;
+  container-type: inline-size;
+}
+/* The diagram measures its type against the stage, not itself. */
+.xp-stage .xp-dia {
+  z-index: 1;
+  container-type: normal;
+}
+
+/* The meridian: a faint vertical through the current role's node, most of the section's height. */
+.xp-meridian {
+  position: absolute;
+  top: -34svh;
+  bottom: -18svh;
+  z-index: 0;
+  width: 1px;
+  margin-left: -0.5px;
+  pointer-events: none;
+  background: linear-gradient(
+    to bottom,
+    rgb(255 255 255 / 0),
+    rgb(255 255 255 / 0.09) 22%,
+    rgb(255 255 255 / 0.09) 70%,
+    rgb(255 255 255 / 0)
+  );
+}
+
+/* The curve: neutral, faint at both ends (the gradient is defined in the drops' <svg>). */
+.xp-dia .dia__wires .wire {
+  stroke: url(#xp-curve-fade);
+}
+.xp-drops {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+.xp-drops line {
+  stroke: rgb(255 255 255 / 0.42);
+  stroke-width: 1;
+  stroke-dasharray: 1 4;
+  vector-effect: non-scaling-stroke;
+}
+
+/* Group labels: the number in vermilion over the verb. */
+.xp-label {
+  display: grid;
+  gap: 0.4em;
+  font-size: max(10px, 1.12cqw);
+  line-height: 1.3;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+.xp-label span:first-child {
+  letter-spacing: 0.08em;
+  color: var(--accent);
+}
+.xp-label span:last-child {
+  font-weight: 500;
+  color: #fff;
+}
+
+/* Nodes: vermilion dots in a white ring; the current role lit, haloed by a dotted ring. */
+.xp-node {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow:
+    0 0 0 2px var(--ink),
+    0 0 0 3px rgb(255 255 255 / 0.78);
+}
+.xp-node--now {
+  width: 13px;
+  height: 13px;
+  box-shadow:
+    0 0 0 3px rgb(224 69 43 / 0.2),
+    0 0 18px 4px rgb(224 69 43 / 0.6),
+    0 0 46px 12px rgb(224 69 43 / 0.2);
+}
+.xp-node--now::before {
+  content: '';
+  position: absolute;
+  inset: -15px;
+  border: 1px dotted rgb(255 255 255 / 0.42);
+  border-radius: 50%;
+}
+
+/* The light streak through the current node: 150 of the diagram's 220 units. */
+.xp-streak {
+  width: 2px;
+  height: calc(150 / 220 * 100%);
+  pointer-events: none;
+  background: linear-gradient(to bottom, rgb(224 69 43 / 0), rgb(224 69 43 / 0.9) 50%, rgb(224 69 43 / 0));
+}
+.xp-streak::after {
+  content: '';
+  position: absolute;
+  inset: 10% -6px;
+  background: linear-gradient(to bottom, rgb(224 69 43 / 0), rgb(224 69 43 / 0.3) 50%, rgb(224 69 43 / 0));
+  filter: blur(4px);
+}
+
+/* ── Role cards: one column per role, gaps of 20 units, so each sits under its node ── */
+
+.xp-roles {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: repeat(var(--cols, 6), minmax(0, 1fr));
+  column-gap: 2cqw;
+  margin-top: 1.4cqw;
+}
+.xp-group,
+.xp-group__roles {
+  display: grid;
+  grid-template-columns: subgrid;
+}
+.xp-group {
+  grid-column: span var(--span, 1);
+}
+.xp-group__roles {
+  grid-column: 1 / -1;
+}
+/* The group's name: drawn in the diagram above on wide screens, read here by assistive tech. */
+.xp-group__h {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+.xp-role {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-width: 0;
+}
+.xp-role__when {
+  font-size: max(10px, 1.06cqw);
+  line-height: 1.4;
+  letter-spacing: 0.04em;
+  font-variant-numeric: tabular-nums;
+  color: var(--mute);
+}
+.xp-role__title {
+  margin-top: 0.85cqw;
+  font: 400 clamp(15px, 1.93cqw, 24px) / 1.18 var(--serif);
+  letter-spacing: -0.005em;
+  text-wrap: pretty;
+  color: #fff;
+}
+.xp-role__org {
+  margin-top: 1.1cqw;
+  font: 500 max(9.5px, 1cqw) / 1.4 var(--mono);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #fff;
+}
+.xp-role__place {
+  margin-top: 0.3cqw;
+  font-size: max(9.5px, 1cqw);
+  line-height: 1.45;
+  color: var(--mute);
+}
+.xp-role__rule {
+  width: 14px;
+  height: 1px;
+  margin: 1.3cqw 0 1.2cqw;
+  background: rgb(255 255 255 / 0.62);
+}
+.xp-role__note {
+  font-size: max(10px, 1.06cqw);
+  line-height: 1.55;
+  color: var(--mute);
+}
+
+/* ── Narrower desktops: copy above, the stage across the full width ── */
+
+@media (max-width: 1300px) {
+  .tile--experience .split.xp {
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: clamp(48px, 7svh, 72px);
+    margin-inline: 0;
+  }
+  .tile--experience .lead__h {
+    font-size: clamp(30px, 3.2vw, 40px);
+    max-width: 15em;
+  }
+  .xp-meridian {
+    top: -8svh;
+    bottom: -8svh;
+  }
+}
+/* chrome.css puts the journey row and the closing line in flow here. */
+@media (max-width: 1240px) {
+  .tile--experience .split.xp {
+    padding-bottom: 0;
+  }
+}
+
+/* ── Phones and tablets: copy, then a vertical timeline ── */
+
+@media (max-width: 900px) {
+  .tile--experience {
+    padding-top: calc(64px + 32px);
+  }
+  .tile--experience .split.xp {
+    row-gap: 48px;
+    padding: 32px 0 0;
+  }
+  .tile--experience .lead__h {
+    font-size: clamp(28px, 8vw, 36px);
+    max-width: 13em;
+  }
+  .xp-dia,
+  .xp-meridian,
+  .xp-cross {
+    display: none;
+  }
+  .xp-stage {
+    container-type: normal;
+  }
+
+  /* A rail down the left; each group a header with a node, each role a small mark on the rail. */
+  .xp-roles {
+    --rail: 5px;
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: 40px;
+    margin-top: 0;
+    padding-left: 30px;
+  }
+  .xp-roles::before {
+    content: '';
+    position: absolute;
+    left: var(--rail);
+    top: 8px;
+    bottom: 8px;
+    width: 1px;
+    background: rgb(255 255 255 / 0.16);
+  }
+  .xp-group,
+  .xp-group__roles {
+    grid-template-columns: minmax(0, 1fr);
+    grid-column: auto;
+    row-gap: 26px;
+  }
+  .xp-group {
+    row-gap: 18px;
+  }
+  .xp-group__h {
+    position: relative;
+    width: auto;
+    height: auto;
+    overflow: visible;
+    clip-path: none;
+    font: 500 11px/1.3 var(--mono);
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: #fff;
+  }
+  .xp-group__h span {
+    margin-right: 10px;
+    font-weight: 400;
+    letter-spacing: 0.08em;
+    color: var(--accent);
+  }
+  .xp-group__h::before,
+  .xp-role::before {
+    content: '';
+    position: absolute;
+    left: calc(var(--rail) - 30px);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+  }
+  .xp-group__h::before {
+    top: 0.65em;
+    width: 9px;
+    height: 9px;
+    background: var(--accent);
+    box-shadow:
+      0 0 0 2px var(--ink),
+      0 0 0 3px rgb(255 255 255 / 0.78);
+  }
+  .xp-role {
+    position: relative;
+  }
+  .xp-role::before {
+    top: 0.7em;
+    width: 5px;
+    height: 5px;
+    border: 1px solid rgb(255 255 255 / 0.45);
+    background: var(--ink);
+  }
+  .xp-role.is-now::before {
+    width: 11px;
+    height: 11px;
+    border: 0;
+    background: var(--accent);
+    box-shadow:
+      0 0 0 3px rgb(224 69 43 / 0.2),
+      0 0 16px 3px rgb(224 69 43 / 0.55);
+  }
+  .xp-role__when {
+    font-size: 11px;
+  }
+  .xp-role__title {
+    margin-top: 6px;
+    font-size: 21px;
+  }
+  .xp-role__org {
+    margin-top: 8px;
+    font-size: 11px;
+  }
+  .xp-role__place {
+    margin-top: 2px;
+    font-size: 11px;
+  }
+  .xp-role__rule {
+    margin: 12px 0 10px;
+  }
+  .xp-role__note {
+    max-width: 44ch;
+    font-size: 12px;
+  }
+}

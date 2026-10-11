@@ -1,0 +1,26 @@
+/* Tailwind v4 for shadcn-style primitives in components/ui. Theme + utilities only:
+   Preflight is deliberately left out so the site's own reset and editorial styles in
+   globals.css stay exactly as they are. */
+@layer theme, base, components, utilities;
+@import 'tailwindcss/theme.css' layer(theme);
+@import 'tailwindcss/utilities.css' layer(utilities);
+
+/* shadcn tokens, mapped onto the site's palette (one accent: --accent). */
+@theme inline {
+  --color-primary: var(--accent);
+  --color-primary-foreground: var(--ink);
+  --color-card: #131721;
+  --color-card-foreground: var(--fg);
+  --color-foreground: var(--fg);
+  --color-background: var(--ink);
+  --color-muted-foreground: var(--mute);
+  --color-border: var(--rule);
+  --color-secondary: #131721;
+  --color-accent: var(--accent);
+  --font-mono: var(--mono);
+  --font-serif: var(--serif);
+}
+
+:root {
+  --primary: var(--accent);
+}

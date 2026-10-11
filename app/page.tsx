@@ -1,39 +1,38 @@
-import { Business } from '@/components/chapters/Business.tsx'
-import { Contact } from '@/components/chapters/Contact.tsx'
-import { Hero } from '@/components/chapters/Hero.tsx'
-import { Leadership } from '@/components/chapters/Leadership.tsx'
-import { Media } from '@/components/chapters/Media.tsx'
-import { Technology } from '@/components/chapters/Technology.tsx'
-import { Ventures } from '@/components/chapters/Ventures.tsx'
 import { MotionRoot } from '@/components/MotionRoot.tsx'
 import { Nav } from '@/components/nav/Nav.tsx'
-import { RecordContent } from '@/components/nav/RecordContent.tsx'
-import { RecordDialog } from '@/components/nav/RecordDialog.tsx'
-import { Overture } from '@/components/Overture.tsx'
-import { chapters } from '@/content/chapters.ts'
+import { Opening } from '@/components/Opening.tsx'
+import { Field } from '@/components/site/Field.tsx'
+import {
+  Business,
+  Contact,
+  Education,
+  Experience,
+  Hero,
+  Leadership,
+  Technology,
+  Ventures,
+} from '@/components/site/Sections.tsx'
 import { profile } from '@/content/profile.ts'
 import { valueOf } from '@/content/schema.ts'
 
 export default function Page() {
   const name = valueOf(profile.name) ?? ''
-  const index = chapters.filter((c) => c.key).map((c) => ({ id: c.id, label: c.label, key: c.key! }))
+  const email = valueOf(profile.email)
   return (
     <>
-      <Nav name={name} />
+      <Field />
+      <Nav name={name} contactHref={email ? `mailto:${email}` : '#contact'} />
       <main>
-        <Hero />
+        <Hero sections={9} />
         <Technology />
         <Business />
-        <Media />
         <Leadership />
         <Ventures />
+        <Experience />
+        <Education />
         <Contact />
       </main>
-      <RecordDialog chapters={index}>
-        <RecordContent />
-      </RecordDialog>
-      <div className="veil" aria-hidden="true" />
-      <Overture />
+      <Opening />
       <MotionRoot />
     </>
   )

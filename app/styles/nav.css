@@ -1,0 +1,187 @@
+/* Floating nav (components/nav/Nav.tsx) and the site glue for the LimelightNav primitive.
+   Unlayered, so it outranks Tailwind's layered utilities where both set a property. */
+
+/* ── Glass ── */
+
+.navf,
+.navf__dock {
+  background: rgba(19, 23, 33, 0.72);
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
+  backdrop-filter: blur(14px) saturate(140%);
+  border: 1px solid var(--rule-strong);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.04),
+    0 10px 30px rgba(4, 5, 8, 0.45);
+}
+
+/* ── Top pill: name · sections · Get in touch ── */
+
+.navf {
+  position: fixed;
+  top: 16px;
+  left: 50%;
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  height: 56px;
+  padding: 0 7px 0 22px;
+  border-radius: 999px;
+  white-space: nowrap;
+  transform: translate(-50%, 0);
+  transition: transform 0.45s cubic-bezier(0.76, 0, 0.24, 1);
+}
+/* Scrolled away; focus inside always brings it back (it never traps a keyboard user). */
+.navf[data-hidden]:not(:focus-within) {
+  transform: translate(-50%, calc(-100% - 40px));
+}
+
+.navf__name {
+  padding: 10px 0;
+  font: 500 11px/1 var(--mono);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--fg);
+}
+.navf__short {
+  display: none;
+}
+
+.navf__sep {
+  flex: none;
+  width: 1px;
+  height: 20px;
+  margin: 0 4px 0 20px;
+  background: var(--rule-strong);
+}
+.navf__sep--links {
+  margin: 0 12px 0 4px;
+}
+
+.navf__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  height: 40px;
+  padding: 0 16px 0 18px;
+  border: 1px solid var(--rule-strong);
+  border-radius: 999px;
+  font: 500 11px/1 var(--mono);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--fg);
+  transition: border-color 0.25s;
+}
+.navf__cta:hover {
+  border-color: var(--accent);
+}
+.navf__cta span {
+  transition: transform 0.25s;
+}
+.navf__cta:hover span {
+  transform: translateX(3px);
+}
+
+/* Inactive icons answer the pointer a little; the active one is already at full strength. */
+@media (hover: hover) {
+  .navf [data-navlink]:not([aria-current]):hover svg {
+    opacity: 0.75;
+  }
+}
+
+/* ── Bottom dock (under 720px the sections live here) ── */
+
+.navf__dock {
+  position: fixed;
+  left: 50%;
+  bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+  z-index: 40;
+  border-radius: 18px;
+  transform: translateX(-50%);
+}
+
+/* ── Focus ── */
+
+.navf a:focus-visible,
+.navf__dock a:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+/* Section items fill the bar's height: ring them inside it, not across the pill's edge. */
+.navf [data-navlink]:focus-visible,
+.navf__dock [data-navlink]:focus-visible {
+  outline-offset: -7px;
+  border-radius: 999px;
+}
+
+/* ── Breakpoints ── */
+
+@media (max-width: 1099px) {
+  .navf__full {
+    display: none;
+  }
+  .navf__short {
+    display: inline;
+  }
+}
+/* Too narrow for the active label: icons + tooltips only. */
+@media (max-width: 959px) {
+  .navf [data-limelight-label] {
+    display: none;
+  }
+}
+@media (max-width: 719px) {
+  .navf {
+    height: 50px;
+    padding: 0 6px 0 18px;
+  }
+  .navf__links,
+  .navf__sep--links {
+    display: none;
+  }
+  .navf__sep {
+    margin: 0 14px 0 16px;
+  }
+  .navf__cta {
+    height: 36px;
+    padding: 0 14px 0 16px;
+  }
+}
+@media (min-width: 720px) {
+  .navf__dock {
+    display: none;
+  }
+}
+
+/* ── Reduced motion: never hides, nothing slides ── */
+
+html[data-motion='reduce'] .navf,
+html[data-motion='reduce'] [data-limelight],
+html[data-motion='reduce'] [data-limelight] * {
+  transition: none;
+}
+html[data-motion='reduce'] .navf[data-hidden] {
+  transform: translate(-50%, 0);
+}
+@media (prefers-reduced-motion: reduce) {
+  .navf,
+  .navf__cta span {
+    transition: none;
+  }
+  .navf[data-hidden] {
+    transform: translate(-50%, 0);
+  }
+}
+
+/* The narrowest phones (320px): tighten the dock so all nine still fit. */
+@media (max-width: 359px) {
+  .navf__dock [data-navlink] {
+    padding-inline: 5px;
+  }
+}
+
+/* The page now ends on Contact: leave room under it so the bottom dock never covers its end. */
+@media (max-width: 719px) {
+  main > section:last-child {
+    padding-bottom: calc(112px + env(safe-area-inset-bottom, 0px));
+  }
+}

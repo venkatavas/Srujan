@@ -1,0 +1,362 @@
+/* 07 Education — owned by components/site/Education.tsx; imported after globals.css and
+   chrome.css. Composition from the client's reference image (1672 × 941), in % of the section:
+   header ≈18% of the height; copy 5–28% of the width (accent rule 31–71%, button ≈78%); the
+   qualifications on an axis at x 50.3% (y 16–83%), cards 39–62.3% (MBA 27–47%, B.Tech
+   55.5–75.5%); the "+" lists 65.5–82%; rings centred on (50.3%, 52%); journey row and closing
+   line at the foot. Nothing here hides content: draw.ts sets the from-states, so reduced motion
+   and no-JS read the finished drawing. */
+
+/* ── Frame ─────────────────────────────────────────────── */
+
+.tile--education {
+  /* One unit that tracks the viewport height at 16:9 and the width when the screen is narrower. */
+  --u: min(1svh, 0.5625vw);
+  /* The header sits a little lower than the shared 104px, as in the image (≈18%). */
+  padding-top: clamp(104px, 16.5svh, 180px);
+  /* The rings stay inside the section. */
+  overflow: clip;
+}
+
+/* ── Copy: 5–28% of the width, centred on the cards ───── */
+
+.tile--education .split.edu {
+  grid-template-columns: minmax(0, calc(23vw + 24px));
+  margin-left: max(0px, calc(5vw - var(--pad-x)));
+  padding-top: clamp(16px, 2.5svh, 32px);
+  /* Lifts the copy's centre onto the composition's (≈54%) above the journey row. */
+  padding-bottom: clamp(32px, 5.5svh, 72px);
+}
+.edu__copy {
+  position: relative;
+  z-index: 2;
+}
+.tile--education .lead__h {
+  /* Four lines, as drawn: A stronger / foundation / for greater / impact. */
+  max-width: 5.6em;
+  font-size: clamp(44px, 3.9vw, 66px);
+  line-height: 1.06;
+  color: #fff;
+}
+.tile--education .lead__body {
+  margin-top: clamp(22px, 3svh, 30px);
+  max-width: 34ch;
+  font-size: 13.5px;
+}
+.tile--education .split__copy .btn {
+  margin-top: clamp(28px, 4.6svh, 48px);
+}
+/* LinkedIn pending: the button is drawn but inactive, dimmed as .btn:disabled (0.4). The dim is
+   in its colours, not its opacity, which enter.ts animates to 1 on the copy's buttons. */
+.tile--education .btn[aria-disabled='true'],
+.tile--education .btn[aria-disabled='true']:hover {
+  border-color: rgb(226 232 255 / 0.08);
+  color: rgb(232 230 225 / 0.4);
+  cursor: not-allowed;
+}
+.tile--education .btn[aria-disabled='true']:hover span {
+  transform: none;
+}
+
+/* ── The board: the reference image as a plate (drift moves it as the diagram column) ── */
+
+.edu__board {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 100svh;
+  z-index: 1;
+  pointer-events: none;
+}
+/* 1672 × 941 units; at 16:9 it is the whole section, narrower screens fit it to the width. */
+.edu__plate {
+  --px: calc(100cqw / 1672);
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: calc(177.78 * var(--u));
+  aspect-ratio: 1672 / 941;
+  transform: translate(-50%, -50%);
+  container-type: inline-size;
+}
+.edu-dia {
+  position: absolute;
+  inset: 0;
+}
+
+/* Rings: a 752-unit square centred on (841, 488); the axis is the diagram's own wire. */
+.edu-rings {
+  position: absolute;
+  inset: 0;
+}
+.edu-rings .rings {
+  left: calc(465 * var(--px));
+  top: calc(112 * var(--px));
+  width: calc(752 * var(--px));
+}
+.edu-rings .rings__axis {
+  display: none;
+}
+.edu-dia .wire {
+  stroke: rgb(255 255 255 / 0.14);
+}
+.edu-tick {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  background: rgb(255 255 255 / 0.4);
+}
+.edu-cross {
+  position: absolute;
+  width: 11px;
+  height: 11px;
+  transform: translate(-50%, -50%);
+  opacity: 0.75;
+  background:
+    linear-gradient(var(--accent), var(--accent)) center / 100% 1px no-repeat,
+    linear-gradient(var(--accent), var(--accent)) center / 1px 100% no-repeat;
+}
+
+/* Vermilion points on the axis: on the MBA card's top edge, and between the cards. */
+.edu-pt {
+  position: absolute;
+  z-index: 3;
+  left: calc(841 * var(--px));
+  top: calc(254 * var(--px));
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  background: var(--accent);
+  box-shadow:
+    0 0 0 3px rgb(224 69 43 / 0.14),
+    0 0 14px 2px rgb(224 69 43 / 0.5);
+}
+.edu-pt--mid {
+  top: calc(488 * var(--px));
+  width: 12px;
+  height: 12px;
+  box-shadow:
+    0 0 0 5px rgb(224 69 43 / 0.13),
+    0 0 26px 6px rgb(224 69 43 / 0.5);
+}
+.edu-pt--mid::before {
+  content: '';
+  position: absolute;
+  inset: -32px;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgb(224 69 43 / 0.2), transparent);
+}
+
+/* ── Qualifications: card + its layer ─────────────────── */
+
+.edu-qual {
+  --top: 254; /* the card's top edge, in units */
+}
+.edu-qual--bottom {
+  --top: 522;
+}
+
+/* 390 × 188 units at x 652. */
+.edu-card {
+  position: absolute;
+  z-index: 2;
+  left: calc(652 * var(--px));
+  top: calc(var(--top) * var(--px));
+  width: calc(390 * var(--px));
+  height: calc(188 * var(--px));
+  display: grid;
+  grid-template-columns: max(18px, calc(26 * var(--px))) minmax(0, 1fr);
+  grid-template-rows: auto auto auto 1fr;
+  column-gap: max(10px, calc(16 * var(--px)));
+  padding: calc(28 * var(--px)) calc(20 * var(--px)) calc(24 * var(--px)) calc(28 * var(--px));
+  border: 1px solid rgb(255 255 255 / 0.16);
+  border-radius: 2px;
+  background: rgb(17 21 30 / 0.94);
+  pointer-events: auto;
+}
+.edu-card__icon {
+  grid-row: 1;
+  align-self: center;
+  width: 100%;
+  height: auto;
+  color: rgb(255 255 255 / 0.88);
+}
+.edu-card__t,
+.edu-card__inst,
+.edu-card__years,
+.edu-card__tags {
+  grid-column: 2;
+  min-width: 0;
+}
+.edu-card__t {
+  font: 500 max(14px, calc(18 * var(--px))) / 1.35 var(--mono);
+  letter-spacing: 0.02em;
+  color: #fff;
+}
+.edu-card__t abbr {
+  text-decoration: none;
+}
+.edu-card__inst {
+  margin-top: max(6px, calc(10 * var(--px)));
+  font-size: max(11px, calc(14 * var(--px)));
+  line-height: 1.6;
+  color: var(--mute);
+}
+.edu-card__years {
+  font-size: max(11px, calc(14 * var(--px)));
+  line-height: 1.6;
+  letter-spacing: 0.02em;
+  color: #fff;
+}
+.edu-card__tags {
+  align-self: end;
+  font-size: max(10px, calc(11.5 * var(--px)));
+  line-height: 1.5;
+  color: rgb(232 230 225 / 0.6);
+}
+.edu-nw {
+  white-space: nowrap;
+}
+
+/* The layer: a bracket at x 1088 centred on its card, a hairline back to the card (from
+   x 1062), and the "+" list inside the bracket. */
+.edu-layer {
+  position: absolute;
+  z-index: 2;
+  left: calc(1088 * var(--px));
+  top: calc((var(--top) + 94) * var(--px));
+  transform: translateY(-50%);
+  padding: calc(6 * var(--px)) 0 calc(6 * var(--px)) max(12px, calc(16 * var(--px)));
+  border-left: 1px solid rgb(255 255 255 / 0.3);
+  pointer-events: auto;
+}
+.edu-layer::before,
+.edu-layer::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  height: 1px;
+  background: rgb(255 255 255 / 0.3);
+}
+/* The bracket's ends ("[") are the top and bottom borders of a narrow box. */
+.edu-layer::before {
+  top: 0;
+  bottom: 0;
+  width: max(6px, calc(8 * var(--px)));
+  height: auto;
+  border-block: 1px solid rgb(255 255 255 / 0.3);
+  background: none;
+}
+/* The hairline from the card. */
+.edu-layer::after {
+  top: 50%;
+  left: calc(-26 * var(--px) - 1px);
+  width: calc(26 * var(--px));
+}
+.edu-layer__h {
+  font-size: max(10px, calc(13 * var(--px)));
+  font-weight: 500;
+  line-height: 1.6;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: #fff;
+}
+.edu-layer__h span {
+  margin-right: 0.45em;
+  color: var(--accent);
+}
+.edu-layer ul {
+  margin-top: max(6px, calc(10 * var(--px)));
+  font-size: max(11px, calc(14 * var(--px)));
+  line-height: 2.05;
+  white-space: nowrap;
+  color: #fff;
+}
+.edu-layer li i {
+  display: inline-block;
+  width: 1.6em;
+  font-style: normal;
+  color: var(--accent);
+}
+
+/* ── Narrow laptops: the journey row and closing line stack in flow (chrome.css) ── */
+
+@media (max-width: 1240px) {
+  .tile--education .split.edu {
+    padding-bottom: clamp(24px, 5svh, 64px);
+  }
+}
+
+/* ── Smaller screens: copy, then each card with its layer, then the journey and outro ── */
+
+@media (max-width: 900px) {
+  .tile--education {
+    padding-top: calc(64px + 32px);
+  }
+  .tile--education .split.edu {
+    grid-template-columns: minmax(0, 1fr);
+    margin-left: 0;
+    padding: 32px 0 0;
+  }
+  .edu__board {
+    position: static;
+    height: auto;
+    pointer-events: auto;
+  }
+  .edu__plate {
+    --px: 1px;
+    position: static;
+    width: auto;
+    aspect-ratio: auto;
+    transform: none;
+    container-type: normal;
+  }
+  .edu-dia,
+  .edu-pt {
+    display: none;
+  }
+  .edu__quals {
+    display: grid;
+    gap: 40px;
+  }
+  .edu-qual {
+    display: grid;
+    gap: 22px;
+  }
+  .edu-card,
+  .edu-layer {
+    position: relative;
+    left: auto;
+    top: auto;
+    transform: none;
+  }
+  .edu-card {
+    width: 100%;
+    max-width: 440px;
+    height: auto;
+    min-height: 168px;
+  }
+  .edu-card__tags {
+    padding-top: 18px;
+  }
+  /* The bracket hangs under the card: a short drop from the card, then the list. */
+  .edu-layer {
+    margin-left: 20px;
+    width: max-content;
+    max-width: calc(100% - 20px);
+  }
+  .edu-layer::after {
+    top: -22px;
+    left: -1px;
+    width: 1px;
+    height: 22px;
+  }
+  .edu-layer__h,
+  .edu-layer ul {
+    white-space: normal;
+  }
+}

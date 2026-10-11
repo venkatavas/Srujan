@@ -1,0 +1,104 @@
+import { readdirSync, readFileSync, statSync } from 'node:fs'
+import { join } from 'node:path'
+import { describe, expect, it } from 'vitest'
+import * as site from '../../content/site.ts'
+
+describe('site content honours the fact rules', () => {
+  it('venture lines are verified facts with a source', () => {
+    for (const c of site.ventures.companies) {
+      expect(c.line.status).toBe('verified')
+      if (c.line.status === 'verified') expect(c.line.source.url).toMatch(/^https:\/\//)
+    }
+  })
+
+  it('Feedec is described as the public record states (social commerce), not as the mockup did', () => {
+    const feedec = site.ventures.companies.find((c) => c.id === 'feedec')!
+    expect(feedec.line.status === 'verified' && feedec.line.value).toMatch(/social commerce/i)
+  })
+
+  it('the career is verified and shows only the dates the client gave', () => {
+    const c = site.experience.career
+    expect(c.status).toBe('verified')
+    const given = new Set(['May 2018', 'Apr 2019', 'Aug 2020', '2021', 'Jul 2022', 'Feb 2023', 'Jul 2023', 'Present'])
+    const roles = c.status === 'verified' ? c.value.flatMap((g) => g.roles) : []
+    for (const r of roles) for (const d of [r.from, r.to]) if (d) expect(given.has(d), d).toBe(true)
+    // The ventures live in the Ventures section, with no dates (none were given).
+    expect(roles.filter((r) => /Floryn|Feedec/.test(r.org))).toEqual([])
+  })
+
+  it('the Times of India note is draft copy, not a verified fact', () => {
+    expect(site.experience.notes['Marketing Lead']?.status).toBe('draft')
+  })
+
+  it('the career has one verb per period', () => {
+    const c = site.experience.career
+    const verbs = site.experience.verbs.status === 'pending' ? [] : site.experience.verbs.value.split(' · ')
+    expect(c.status === 'verified' && c.value.length).toBe(verbs.length)
+  })
+
+  it('every role in the hero title is a verified role (career or ventures)', () => {
+    const t = site.home.title
+    expect(t.status).toBe('verified')
+    const c = site.experience.career
+    const career = c.status === 'verified' ? c.value.flatMap((g) => g.roles.map((r) => r.title)) : []
+    const ventures = site.ventures.companies.flatMap((co) => (co.role.status === 'verified' ? co.role.value : ''))
+    const known = [...career, ...ventures].join(' | ')
+    if (t.status === 'verified')
+      for (const part of t.value.split(' · ')) expect(known.replaceAll(' · ', ' & ')).toContain(part.replace(' · ', ' & '))
+  })
+
+  it('the Upcoming venture card is draft copy for Sai to approve, never a verified fact', () => {
+    const u = site.ventures.upcoming
+    expect(u.status).toBe('draft')
+    expect(u.status).not.toBe('verified')
+  })
+})
+
+describe('no coordinates are rendered (client decision)', () => {
+  const files: string[] = []
+  const walk = (d: string) => {
+    for (const f of readdirSync(d)) {
+      const p = join(d, f)
+      if (statSync(p).isDirectory()) walk(p)
+      else if (/\.(tsx?|css|mdx?|json)$/.test(f)) files.push(p)
+    }
+  }
+  ;['app', 'components', 'content'].forEach(walk)
+
+  it('no source file under app, components or content holds the Hyderabad coordinates', () => {
+    expect(files.length).toBeGreaterThan(0)
+    for (const f of files) {
+      const s = readFileSync(f, 'utf8')
+      expect(s, f).not.toContain('17.3856')
+      expect(s, f).not.toContain('78.4867')
+    }
+  })
+})
+
+describe('the site has no images', () => {
+  const roots = ['app', 'components', 'content', 'motion', 'lib']
+  const files: string[] = []
+  const walk = (d: string) => {
+    for (const f of readdirSync(d)) {
+      const p = join(d, f)
+      if (statSync(p).isDirectory()) walk(p)
+      else if (/\.(tsx?|css)$/.test(f)) files.push(p)
+    }
+  }
+  roots.forEach(walk)
+
+  it('no <img>, next/image or /media/ references anywhere in app code', () => {
+    for (const f of files) {
+      const s = readFileSync(f, 'utf8')
+      expect(s, f).not.toMatch(/<img\b|next\/image|\/media\//)
+    }
+  })
+
+  it('no image files are shipped', () => {
+    let found: string[] = []
+    try {
+      found = readdirSync('public').filter((f) => /\.(jpe?g|png|webp|avif|gif)$/i.test(f))
+    } catch {}
+    expect(found).toEqual([])
+  })
+})
