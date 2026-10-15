@@ -1,49 +1,54 @@
 import type { Metadata, Viewport } from 'next'
-import { Hanken_Grotesk, IBM_Plex_Mono, Newsreader } from 'next/font/google'
+import { Newsreader } from 'next/font/google'
+import { name as givenName, summary } from '@/content/live.ts'
+import { SITE_URL } from '@/lib/site-url.ts'
 import './styles/tailwind.css'
 import './globals.css'
-import './styles/blueprint.css'
-import './styles/motion.css'
 import './styles/nav.css'
-import './styles/hero.css'
-import './styles/technology.css'
-import './styles/chrome.css'
-import './styles/business.css'
-import './styles/leadership.css'
-import './styles/ventures.css'
-import './styles/experience.css'
-import './styles/education.css'
-import './styles/contact.css'
 
-// Newsreader for the name and headlines, IBM Plex Mono for labels and body, Hanken Grotesk for long statements.
-const serif = Newsreader({ subsets: ['latin'], axes: ['opsz'], variable: '--f-serif' })
-const sans = Hanken_Grotesk({ subsets: ['latin'], variable: '--f-sans' })
-const mono = IBM_Plex_Mono({ subsets: ['latin'], weight: ['400', '500'], variable: '--f-mono' })
+// Newsreader for the section headings. The home page adds Outfit and Geist Mono
+// (components/home/fonts.ts); the preview-only /explore pages load their own (app/explore/layout.tsx).
+// Not preloaded: it is first needed below the hero, so the hero's own font (Outfit) arrives first.
+const serif = Newsreader({ subsets: ['latin'], axes: ['opsz'], variable: '--f-serif', preload: false })
 
+// The description and share text come from the verified name and positioning, like the hero.
+const name = givenName || 'Sai Srujan Pasala'
+const description = summary
+
+// The share preview image comes from app/opengraph-image.tsx. Its absolute URL and the canonical
+// link (app/page.tsx) use the site's address (lib/site-url.ts: NEXT_PUBLIC_SITE_URL, or the Vercel domain).
 export const metadata: Metadata = {
-  title: 'Sai Srujan Pasala',
-  description: 'Computer science engineer and MBA, working across technology, business, media and ventures.',
+  ...(SITE_URL ? { metadataBase: new URL(SITE_URL) } : {}),
+  title: name,
+  description,
+  openGraph: { type: 'website', title: name, description, siteName: name },
+  twitter: { card: 'summary_large_image', title: name, description },
 }
 
-export const viewport: Viewport = { themeColor: '#0D1016' }
+export const viewport: Viewport = { themeColor: '#FAF9F7' }
 
-// Runs before first paint: opens the loading-milestone registry (lib/loading.ts), decides
-// motion mode, and whether the opening plays: on every load (the site always opens on its hero,
-// so a #section is dropped and scroll is not restored), except under reduced motion and in
-// ?seek captures. Any input skips it, before hydration.
-const boot = `(function(){var w=window,d=document.documentElement,r=false;
-var L=w.__ssLoad={m:{},f:[],mark:function(k){if(L.m[k])return;L.m[k]=performance.now();for(var i=0;i<L.f.length;i++)L.f[i](k)}};
-document.addEventListener('DOMContentLoaded',function(){L.mark('doc')},{once:true});
-addEventListener('load',function(){L.mark('load')},{once:true});
+// Runs before first paint: decides the motion mode (reduced motion, or the saved preference), so
+// the site's entrance and scroll reveals never flash. On the home page every load and refresh
+// starts at the hero: the browser's restored scroll position and any #section in the address
+// are dropped (in-page nav links still jump as usual). With full motion the home page also opens
+// with its preloader (data-pre, components/home/Preloader.tsx), on before anything is painted, once
+// per browser session. A key, click, wheel or touch skips it at once, even before the page's
+// JavaScript has loaded. The exit itself lives only here (window.__ssPreEnd): it marks the handoff
+// to the hero (unless the CSS failsafe has already hidden the opening, at 3.5s), fades it over 450ms
+// (preloader.css, pre-out) and remembers it for the session. Preloader.tsx only decides when.
+const boot = `(function(){var d=document.documentElement,r=false;
 try{r=matchMedia('(prefers-reduced-motion: reduce)').matches||localStorage.getItem('ss-motion')==='reduce'}catch(e){}
 d.dataset.motion=r?'reduce':'full';
-d.dataset.boot=(r||location.search.indexOf('seek=')>-1)?'skip':'play';
-if(d.dataset.boot==='play'){d.dataset.pre='full';try{history.scrollRestoration='manual';if(location.hash)history.replaceState(null,'',location.pathname+location.search)}catch(e){}var ev=['keydown','wheel','touchstart','pointerdown'];var s=function(){if(d.dataset.boot==='play')d.dataset.boot='skip';ev.forEach(function(e){removeEventListener(e,s,true)})};ev.forEach(function(e){addEventListener(e,s,{capture:true,passive:true})})}
+if(location.pathname==='/'){var s=false;try{s=sessionStorage.getItem('ss-pre')==='1'}catch(e){}if(!r&&!s){d.dataset.pre='on';
+var ev=['keydown','pointerdown','wheel','touchstart'],off=function(){ev.forEach(function(n){removeEventListener(n,end,true)})},
+end=function(){off();if(d.dataset.pre!=='on')return;if(performance.now()<3400)d.dataset.handoff='1';d.dataset.pre='out';try{sessionStorage.setItem('ss-pre','1')}catch(e){}
+setTimeout(function(){if(d.dataset.pre==='out')delete d.dataset.pre},450)};
+window.__ssPreEnd=end;ev.forEach(function(n){addEventListener(n,end,{capture:true,passive:true})})}try{history.scrollRestoration='manual';if(location.hash)history.replaceState(null,'',location.pathname+location.search)}catch(e){}scrollTo(0,0)}
 })();`
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${serif.variable} ${sans.variable} ${mono.variable}`} suppressHydrationWarning>
+    <html lang="en" className={serif.variable} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: boot }} />
       </head>

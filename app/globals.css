@@ -1,20 +1,21 @@
-/* Sai Srujan Pasala — dark, editorial, technical. The approved mockup is the target.
-   Tokens are functional: orange marks wires, active states, highlights, conflict, caret. */
+/* Site-wide base for Sai Srujan Pasala's site: a light page, the reset, and the tokens the
+   floating nav (app/styles/nav.css) and the shadcn-style primitives (app/styles/tailwind.css)
+   read. The home page's own system lives in components/home (tokens.css, home.css, story.css,
+   site.css) and overrides these under .site. */
 
 :root {
-  --ink: #0d1016;
-  --rule: rgba(226, 232, 255, 0.1);
-  --rule-strong: rgba(226, 232, 255, 0.2);
-  --wire: rgba(226, 232, 255, 0.3);
-  --fg: #e8e6e1;
-  --mute: #9a9da4;
-  --accent: #e0452b;
+  --ink: #faf9f7; /* page ground (the nav's legacy name for it) */
+  --fg: #1b1a2e;
+  --mute: #4c4a66;
+  --rule: rgb(27 26 46 / 0.13);
+  --rule-strong: rgb(27 26 46 / 0.18);
+  --accent: #4d4ad0;
 
-  --pad-x: clamp(20px, 3.4vw, 56px);
   --serif: var(--f-serif), Georgia, serif;
-  --mono: var(--f-mono), ui-monospace, monospace;
-  --sans: var(--f-sans), system-ui, sans-serif;
-  color-scheme: dark;
+  /* Fallbacks keep these valid at :root, where no next/font variable is defined. */
+  --mono: var(--f-mono, ui-monospace), ui-monospace, monospace;
+  --sans: var(--f-sans, system-ui), system-ui, sans-serif;
+  color-scheme: light;
 }
 
 /* The reset sits in Tailwind's base layer, so the utilities used by components/ui (p-5, px-2…)
@@ -34,7 +35,7 @@ html {
   scroll-padding-top: 72px;
 }
 body {
-  font: 400 14px/1.65 var(--mono);
+  font: 400 16px/1.6 var(--sans);
   color: var(--fg);
   background: transparent;
   -webkit-font-smoothing: antialiased;
@@ -52,274 +53,16 @@ b {
   font-weight: 500;
 }
 :focus-visible {
-  outline: 1px solid var(--accent);
-  outline-offset: 4px;
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
 }
 
-/* ── The Spec Sheet field ─────────────────────────────── */
-
-.field {
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-  background: var(--ink);
-}
-.field > div {
-  position: absolute;
-  inset: 0;
-}
-.field__lamp {
-  background: radial-gradient(ellipse 55% 45% at 10% 0%, rgba(196, 210, 255, 0.065), transparent 70%);
-}
-.field__grid {
-  background-image:
-    linear-gradient(to right, rgba(226, 232, 255, 0.032) 1px, transparent 1px),
-    linear-gradient(rgba(226, 232, 255, 0.032) 1px, transparent 1px);
-  background-size: 48px 48px;
-}
-.field__crosses {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='192' height='192'%3E%3Cpath d='M0 -5V5M-5 0H5M192 -5V5M187 0H197M0 187V197M-5 192H5M192 187V197M187 192H197' stroke='%23E2E8FF' stroke-opacity='.16' stroke-width='1'/%3E%3C/svg%3E");
-  background-size: 192px 192px;
-  background-position: 0.5px 0.5px;
-}
-.field__grain {
-  opacity: 0.035;
-  mix-blend-mode: overlay;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-}
-.field__vignette {
-  background: radial-gradient(ellipse at 50% 45%, transparent 55%, rgba(4, 5, 8, 0.5) 100%);
-}
-
-/* ── Shared type & instruments ────────────────────────── */
-
-.dot {
-  display: inline-block;
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--accent);
-  margin-right: 10px;
-  vertical-align: 2px;
-}
-.panel {
-  background: rgba(19, 23, 33, 0.72);
-  border: 1px solid var(--rule);
-  border-radius: 2px;
-}
-.panel__head {
-  display: flex;
-  justify-content: space-between;
-  gap: 16px;
-  padding: 14px 18px;
-  border-bottom: 1px solid var(--rule);
-  font-size: 11px;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--mute);
-}
-.panel__head b {
-  color: var(--fg);
-  margin-right: 14px;
-}
-.btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 12px;
-  padding: 11px 16px;
-  border: 1px solid var(--rule-strong);
-  border-radius: 2px;
-  font: 500 11px/1 var(--mono);
-  letter-spacing: 0.14em;
-  white-space: nowrap;
-  text-transform: uppercase;
-  color: var(--fg);
-  background: transparent;
-  cursor: pointer;
-  transition:
-    border-color 0.25s,
-    color 0.25s;
-}
-.btn:hover {
-  border-color: var(--accent);
-}
-.btn span {
-  transition: transform 0.25s;
-}
-.btn:hover span {
-  transform: translateX(3px);
-}
-.btn--accent {
-  border-color: var(--accent);
-  color: var(--accent);
-}
-.btn:disabled {
-  opacity: 0.4;
-  cursor: not-allowed;
-}
-
-/* ── Sections ─────────────────────────────────────────── */
-
-.sec,
-.tile {
-  position: relative;
-  min-height: 100svh;
-  padding: calc(64px + 40px) var(--pad-x) 64px;
-  border-bottom: 1px solid var(--rule);
-}
-.tile {
-  display: flex;
-  flex-direction: column;
-}
-.tile__head {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  gap: 24px;
-  padding-bottom: 18px;
-  border-bottom: 1px solid var(--rule);
-}
-.tile__title {
-  font: 500 13px/1 var(--mono);
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-}
-.tile__n {
-  color: var(--accent);
-  margin-right: 18px;
-}
-.tile__caption {
-  font-size: 11px;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--mute);
-}
-.split {
-  flex: 1;
-  display: grid;
-  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
-  gap: clamp(32px, 5vw, 88px);
-  align-items: center;
-  padding-top: clamp(32px, 6svh, 72px);
-}
-.split--wide {
-  grid-template-columns: minmax(0, 4fr) minmax(0, 8fr);
-}
-/* The accent rule is a ::before so the entrance can grow it (--rule 0→1); at rest it is whole. */
-.lead,
-.statement {
-  position: relative;
-  padding-left: calc(2px + clamp(18px, 2vw, 28px));
-}
-.lead::before,
-.statement::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  width: 2px;
-  background: var(--accent);
-  transform: scaleY(var(--rule, 1));
-  transform-origin: top;
-}
-.lead__h {
-  font: 400 clamp(40px, 4.3vw, 70px) / 1.04 var(--serif);
-  font-variation-settings: 'opsz' 72;
-  letter-spacing: -0.015em;
-  max-width: 9ch;
-}
-.lead__body {
-  margin-top: 26px;
-  max-width: 38ch;
-  font-size: 14px;
-  line-height: 1.7;
-  color: var(--mute);
-}
-.split__copy .btn {
-  margin: 32px 0 0 clamp(20px, 2vw, 30px);
-}
-.credential {
-  margin: 40px 0 0 clamp(20px, 2vw, 30px);
-  width: max-content;
-  min-width: 230px;
-  padding: 14px 18px;
-  border: 1px solid var(--rule);
-  background: rgba(19, 23, 33, 0.6);
-}
-.credential dt {
-  font-size: 10px;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--mute);
-  margin-bottom: 8px;
-}
-.credential dd {
-  font-size: 13px;
-  line-height: 1.6;
-}
-
-/* The narrative caret: hero brief, Contact field. */
-.caret {
-  display: inline-block;
-  width: 2px;
-  height: 1.05em;
-  margin-left: 0.3em;
-  vertical-align: -0.16em;
-  background: var(--accent);
-  animation: caret 1s steps(1, end) 0.4s 4;
-}
-@keyframes caret {
-  50% {
-    opacity: 0;
-  }
-}
-
-/* ── Diagrams ─────────────────────────────────────────── */
-
-.scroll-x {
-  min-width: 0;
-}
-.dia {
-  position: relative;
-  width: 100%;
-  container-type: inline-size;
-}
-.dia__wires {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  overflow: visible;
-}
-.wire {
-  fill: none;
-  stroke: var(--wire);
-  stroke-width: 1;
-  vector-effect: non-scaling-stroke;
-}
-.wire--accent {
-  stroke: var(--accent);
-}
-.wire--dot {
-  fill: var(--accent);
-}
-.wire--dashed {
-  stroke-dasharray: 3 4;
-}
-.at {
-  position: absolute;
-  white-space: nowrap;
-  font-size: 1.35cqw;
-  line-height: 1.5;
-}
-
-/* ── Review page ──────────────────────────────────────── */
+/* ── Review page (/review, preview builds only) ───────── */
 
 .review {
   min-height: 100vh;
-  padding: 48px var(--pad-x);
+  padding: 48px clamp(20px, 3.4vw, 56px);
+  font-family: var(--f-y), system-ui, sans-serif;
 }
 .review h1 {
   font: 400 40px/1.1 var(--serif);
@@ -344,44 +87,29 @@ b {
   color: var(--mute);
   font-size: 12px;
 }
-
-/* ── Smaller screens: a stacked, intentional reading ──── */
-
-@media (max-width: 900px) {
-  .sec,
-  .tile {
-    min-height: 0;
-    padding-top: calc(64px + 32px);
-    padding-bottom: 56px;
-  }
-  .split,
-  .split--wide {
-    grid-template-columns: minmax(0, 1fr);
-    gap: 40px;
-  }
-  .tile__caption {
-    display: none;
-  }
-  /* Wide diagrams keep their proportions and scroll sideways. */
-  .scroll-x {
-    overflow-x: auto;
-    margin: 0 calc(-1 * var(--pad-x));
-    padding: 0 var(--pad-x) 8px;
-    scroll-snap-type: x proximity;
-  }
-  .scroll-x > .dia {
-    min-width: 720px;
-  }
-  /* A fade on the trailing edge says "there is more to the right". */
-  .scroll-x {
-    mask-image: linear-gradient(to right, #000 82%, transparent);
-  }
+.review__h2 {
+  margin: 48px 0 12px;
+  font: 400 28px/1.2 var(--serif);
+}
+.review__group h3 {
+  margin: 28px 0 8px;
+  font-size: 15px;
+  font-weight: 600;
+}
+.review__list {
+  display: grid;
+  gap: 10px;
+  max-width: 75ch;
+  padding-left: 22px;
+  list-style: decimal;
+}
+.review__id {
+  width: 48px;
+  color: var(--mute);
+  font-size: 13px;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .caret {
-    animation: none;
-  }
   * {
     transition: none !important;
   }

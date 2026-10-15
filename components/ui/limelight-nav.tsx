@@ -113,7 +113,9 @@ export const LimelightNav = ({
       w = Math.max(44, Math.round(content + 12))
       limelight.style.width = `${w}px`
     }
-    limelight.style.left = `${x + widths[active] / 2 - w / 2}px`
+    // Position by transform (compositor-friendly); left stays at 0. Width still eases, because
+    // scaling instead would stretch the bar's rounded ends, its glow and the cone beneath it.
+    limelight.style.transform = `translateX(${x + widths[active] / 2 - w / 2}px)`
     return true
   }, [items.length, showActiveLabel])
 
@@ -129,7 +131,7 @@ export const LimelightNav = ({
       }
       const w = 44
       limelight.style.width = `${w}px`
-      limelight.style.left = `${el.offsetLeft + el.offsetWidth / 2 - w / 2}px`
+      limelight.style.transform = `translateX(${el.offsetLeft + el.offsetWidth / 2 - w / 2}px)`
     },
     [layout],
   )
@@ -267,11 +269,12 @@ export const LimelightNav = ({
       <div
         ref={limelightRef}
         className={cn(
-          'absolute top-0 z-10 w-11 h-[5px] rounded-full bg-primary shadow-[0_50px_15px_var(--primary)]',
-          isReady && 'transition-[left,width] duration-400 ease-in-out motion-reduce:transition-none',
+          'absolute left-0 top-0 z-10 w-11 h-[5px] rounded-full bg-primary shadow-[0_50px_15px_var(--primary)]',
+          isReady && 'transition-[transform,width] duration-400 ease-in-out motion-reduce:transition-none',
           limelightClassName,
         )}
-        style={{ left: '-999px' }}
+        data-limelight-bar
+        style={{ transform: 'translateX(-999px)' }}
       >
         <div className="absolute left-[-30%] top-[5px] w-[160%] h-[var(--limelight-cone,3.5rem)] [clip-path:polygon(5%_100%,25%_0,75%_0,95%_100%)] bg-gradient-to-b from-primary/30 to-transparent pointer-events-none" />
       </div>

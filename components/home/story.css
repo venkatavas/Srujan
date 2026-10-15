@@ -1,0 +1,1916 @@
+/* The site's sections after the hero (components/home/Story.tsx), built to the client's reference
+   images. Scoped under .sy2 (the site root), on the tokens in tokens.css.
+   Accent colours, each with a fixed tint; text contrast computed on the canvas (#faf9f7), white
+   and its own tint: indigo #4d4ad0 >= 5.8:1, coral #c83c34 >= 4.5:1, teal #0c766a >= 4.6:1,
+   blue #2259c0 >= 5.7:1, grey #5f5d72 >= 5.6:1; ink-3 >= 5.4:1, ink-2 >= 7.5:1. */
+
+.sy2 {
+  --serif: var(--f-serif), Georgia, serif;
+  --c-coral: #c83c34;
+}
+.st-c-indigo {
+  --tone: var(--peri);
+  --tint: #f0eefd;
+}
+.st-c-coral {
+  --tone: #c83c34;
+  --tint: #fdeeec;
+}
+.st-c-teal {
+  --tone: #0c766a;
+  --tint: #e8f5f1;
+}
+.st-c-blue {
+  --tone: #2259c0;
+  --tint: #ebf1fd;
+}
+.st-c-grey {
+  --tone: #5f5d72;
+  --tint: #efeef3;
+}
+
+/* ── Every section: one screen tall, content centred, a hairline on top ── */
+
+.st-sec {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-height: 100svh;
+}
+.st-sec::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: max(var(--gutter), calc((100% - 1240px) / 2));
+  right: max(var(--gutter), calc((100% - 1240px) / 2));
+  height: 1px;
+  background: var(--line);
+}
+.st-wrap {
+  width: 100%;
+  max-width: calc(1240px + 2 * var(--gutter));
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+/* The top always clears the floating pill (16px + 56px), so a nav jump never hides a label. */
+.st-sec > .st-wrap {
+  flex: 1;
+  padding-block: 104px clamp(48px, 5vw, 72px);
+}
+.st-grid {
+  display: grid;
+  gap: 36px;
+}
+
+/* ── The shared left column ──────────────────────────── */
+
+.st-label {
+  font: 500 14px / 1.3 var(--f-code), ui-monospace, monospace;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+.st-label__n {
+  color: var(--ink-2);
+}
+.st-rule {
+  display: block;
+  width: 60px;
+  height: 2px;
+  margin-top: 16px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, var(--peri), var(--c-coral));
+  transform-origin: left;
+}
+.st-h {
+  margin-top: clamp(22px, 2.6vw, 36px);
+  max-width: 12ch;
+  font: 400 clamp(36px, 4vw, 58px) / 1.04 var(--serif);
+  font-variation-settings: 'opsz' 72;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  text-wrap: balance;
+}
+.st-h__end {
+  color: var(--tone);
+}
+.st-sub {
+  margin-top: clamp(20px, 2.4vw, 32px);
+  max-width: 32ch;
+  font-size: clamp(17px, 1.4vw, 20px);
+  line-height: 1.55;
+  color: var(--ink-3);
+}
+.st-sub--lg {
+  max-width: 24ch;
+  font-size: clamp(19px, 1.8vw, 26px);
+  line-height: 1.45;
+}
+.st-kicker {
+  font: 600 14px / 1.3 var(--sans);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+.st-intro {
+  max-width: 52ch;
+  font-size: clamp(17px, 1.4vw, 20px);
+  line-height: 1.65;
+  color: var(--ink-3);
+}
+.st-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 10px;
+}
+.st-tags li {
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.3;
+  background: var(--tint, #efeef3);
+  color: var(--tone, var(--ink-2));
+}
+
+/* ── 01 About ────────────────────────────────────────── */
+
+.st-about__grid {
+  display: grid;
+  gap: 48px;
+}
+/* About's heading uses the same serif as every other section; only its last line takes the
+   accent colour. */
+.st-about__h {
+  margin-top: clamp(28px, 3.4vw, 48px);
+  font: 400 clamp(42px, 4.4vw, 66px) / 1.04 var(--serif);
+  font-variation-settings: 'opsz' 72;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
+.st-about__l1,
+.st-about__l2,
+.st-about__l3 {
+  display: block;
+}
+.st-about__l3 {
+  color: var(--peri);
+}
+.st-about__mid,
+.st-about__side {
+  display: grid;
+  gap: 28px;
+  align-content: start;
+}
+.st-about__text {
+  display: grid;
+  gap: 26px;
+  max-width: 40ch;
+  font-size: clamp(17px, 1.45vw, 21px);
+  line-height: 1.6;
+  color: var(--ink-2);
+}
+.st-pillars {
+  display: grid;
+  gap: 22px;
+  margin-top: 12px;
+}
+.st-pillars li {
+  position: relative;
+  display: grid;
+  gap: 10px;
+  align-content: start;
+  padding-left: 26px;
+}
+.st-pillars li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 2px;
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: var(--tone);
+  opacity: 0.85;
+}
+.st-pillars__t {
+  font: 600 14px / 1.35 var(--sans);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+}
+.st-pillars__p {
+  font-size: 16px;
+  line-height: 1.55;
+  color: var(--ink-3);
+}
+.st-principles {
+  position: relative;
+  display: grid;
+  gap: 34px;
+  padding-left: 40px;
+}
+.st-principles::before {
+  content: '';
+  position: absolute;
+  left: 7px;
+  top: 10px;
+  bottom: 30px;
+  width: 1px;
+  background: color-mix(in srgb, var(--peri) 35%, transparent);
+  transform-origin: top;
+}
+.st-principles li {
+  position: relative;
+  display: grid;
+  gap: 6px;
+}
+.st-principles li::before {
+  content: '';
+  position: absolute;
+  left: -40px;
+  top: 5px;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background: var(--tone);
+  box-shadow: 0 0 0 5px var(--canvas);
+}
+.st-principles__t {
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--ink);
+}
+.st-principles__p {
+  font-size: 15.5px;
+  line-height: 1.55;
+  color: var(--ink-3);
+}
+
+/* ── 02 How I work, 03 Path: heading row, then the wave ── */
+
+.st-head {
+  display: grid;
+  gap: 28px;
+  align-items: start;
+}
+.st-wave {
+  position: relative;
+  margin-top: clamp(24px, 3vw, 40px);
+}
+.st-wave__line,
+.st-wave__vline,
+.st-wave__centre,
+.st-wave__end {
+  display: none;
+}
+/* Where the drawn line reaches each node (Story.tsx, reachAt): --fd on the wide drawing, --fv on
+   the phone drawing. Every timing below reads --f. */
+.st-step,
+.st-wave__centre,
+.st-wave__end {
+  --f: var(--fd);
+}
+/* Narrow screens: the steps stack along a dashed rule. */
+.st-wave__steps {
+  position: relative;
+  display: grid;
+  gap: 32px;
+}
+.st-wave__steps::before {
+  content: '';
+  position: absolute;
+  left: 27px;
+  top: 28px;
+  bottom: 28px;
+  border-left: 1px dashed color-mix(in srgb, var(--ink) 22%, transparent);
+}
+.st-step {
+  position: relative;
+  display: grid;
+  grid-template-columns: 56px minmax(0, 1fr);
+  gap: 20px;
+  align-items: start;
+}
+.st-step__dot,
+.st-step__stem {
+  display: none;
+}
+.st-step__num {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--tint);
+  font: 400 24px / 1 var(--f-code), ui-monospace, monospace;
+  color: var(--tone);
+}
+.st-step__t {
+  font: 400 clamp(26px, 2.5vw, 38px) / 1.1 var(--serif);
+  font-variation-settings: 'opsz' 72;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+}
+.st-step__bar {
+  display: block;
+  width: 38px;
+  height: 2px;
+  margin: 14px 0 12px;
+  border-radius: 2px;
+  background: var(--tone);
+}
+.st-step__p {
+  max-width: 30ch;
+  font-size: 16.5px;
+  line-height: 1.55;
+  color: var(--ink-3);
+}
+.st-wave--path .st-step__num {
+  width: 56px;
+  height: 44px;
+  border-radius: 12px;
+  font-size: 21px;
+  font-weight: 600;
+}
+
+/* ── 04 Ventures ─────────────────────────────────────── */
+
+.st-ventures {
+  display: grid;
+  gap: 18px;
+}
+.st-venture {
+  display: grid;
+  gap: 6px;
+  align-content: start;
+  padding: 32px 36px;
+  border: 1px solid var(--hair);
+  border-radius: 16px;
+  background: var(--surface);
+  box-shadow: var(--shadow-soft);
+  transition:
+    transform 260ms var(--ease-out, ease),
+    box-shadow 260ms var(--ease-out, ease);
+}
+.st-venture__name {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font: 400 clamp(28px, 2.6vw, 38px) / 1.1 var(--serif);
+  font-variation-settings: 'opsz' 72;
+  letter-spacing: -0.015em;
+  color: var(--ink);
+}
+.st-venture__name::before {
+  content: '';
+  flex: none;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--tone);
+}
+.st-venture__role {
+  margin-top: 10px;
+  padding-left: 21px;
+  font-size: 16.5px;
+  font-weight: 500;
+  color: var(--ink);
+}
+.st-venture__line {
+  padding-left: 21px;
+  font-size: 15.5px;
+  color: var(--ink-3);
+}
+.st-venture__link {
+  justify-self: start;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 44px;
+  margin-top: 8px;
+  padding-left: 21px;
+  font-size: 14.5px;
+  font-weight: 500;
+  color: var(--tone);
+}
+.st-venture__link svg {
+  transition: transform 200ms;
+}
+.st-venture__link:hover {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.st-venture__link:hover svg {
+  transform: translateX(3px);
+}
+@media (hover: hover) {
+  .st-venture:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lift);
+  }
+}
+
+/* What I look for: four quiet columns under the venture cards. */
+.st-ventures__main {
+  display: grid;
+  gap: clamp(36px, 4vw, 56px);
+}
+.st-looks {
+  display: grid;
+  gap: 20px;
+}
+.st-looks__list {
+  display: grid;
+  gap: 18px;
+}
+.st-looks__list li {
+  position: relative;
+  display: grid;
+  gap: 6px;
+  align-content: start;
+  padding-left: 24px;
+}
+.st-looks__list li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 6px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--tone);
+}
+.st-looks__t {
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--ink);
+}
+.st-looks__p {
+  display: grid;
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--ink-3);
+}
+@media (min-width: 640px) {
+  .st-looks__list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (min-width: 1100px) {
+  .st-looks__list {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0;
+  }
+  .st-looks__list li + li {
+    padding-left: 44px;
+    border-left: 1px solid var(--line);
+  }
+  .st-looks__list li + li::before {
+    left: 20px;
+  }
+}
+
+/* ── 05 Experience ───────────────────────────────────── */
+
+.st-xp {
+  position: relative;
+  display: grid;
+  padding-left: 40px;
+}
+.st-xp::before {
+  content: '';
+  position: absolute;
+  left: 7px;
+  top: 30px;
+  bottom: 30px;
+  width: 1px;
+  background: var(--line);
+  transform-origin: top;
+}
+.st-xp__row {
+  position: relative;
+  display: grid;
+  gap: 6px;
+  padding-block: 7px;
+}
+.st-xp__row::before {
+  content: '';
+  position: absolute;
+  left: -40px;
+  top: 14px;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background: var(--tone);
+  box-shadow: 0 0 0 5px var(--tint);
+}
+.st-xp__when {
+  display: grid;
+  gap: 4px;
+  align-content: start;
+}
+.st-xp__big {
+  font: 500 15px / 1.4 var(--f-code), ui-monospace, monospace;
+  letter-spacing: 0.04em;
+  color: var(--ink-2);
+}
+.st-xp__big--now {
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--peri);
+}
+.st-xp__small {
+  font-size: 14.5px;
+  color: var(--ink-3);
+}
+.st-xp__t {
+  font-size: 17px;
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--ink);
+}
+.st-xp__org {
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--ink-2);
+}
+.st-xp__place {
+  font-size: 15px;
+  color: var(--ink-3);
+}
+.st-xp__desc {
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--ink-3);
+}
+
+/* ── 06 Education ────────────────────────────────────── */
+
+.st-orbits {
+  display: none;
+}
+.st-education {
+  overflow: clip;
+}
+.st-edu {
+  position: relative;
+  display: grid;
+  gap: 28px;
+  padding-left: 40px;
+}
+.st-edu::before {
+  content: '';
+  position: absolute;
+  left: 7px;
+  top: 52px;
+  bottom: 52px;
+  width: 1px;
+  background: var(--line);
+  transform-origin: top;
+}
+.st-edu__item {
+  position: relative;
+}
+.st-edu__item::before {
+  content: '';
+  position: absolute;
+  left: -40px;
+  top: 48px;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background: #8a889c;
+  box-shadow: 0 0 0 6px #efeef3;
+}
+.st-edu__item.is-now::before {
+  background: var(--peri);
+  box-shadow: 0 0 0 6px #e9e6fd;
+}
+.st-edu__card {
+  display: grid;
+  gap: 20px;
+  padding: clamp(20px, 2.2vw, 28px) clamp(22px, 2.6vw, 34px);
+  border: 1px solid var(--hair);
+  border-radius: 20px;
+  background: var(--surface);
+  box-shadow: 0 1px 2px rgb(40 30 90 / 0.04);
+  transition:
+    transform 260ms var(--ease-out, ease),
+    box-shadow 260ms var(--ease-out, ease);
+}
+.st-edu__item.is-now .st-edu__card {
+  border-color: color-mix(in srgb, var(--peri) 22%, transparent);
+  background: linear-gradient(135deg, #f5f3fe, #f8f6fe 60%, #fbfaff);
+  box-shadow: 0 24px 48px -26px color-mix(in srgb, var(--peri) 45%, transparent);
+}
+@media (hover: hover) {
+  .st-edu__card:hover {
+    transform: translateY(-3px);
+  }
+}
+.st-edu__icon {
+  display: grid;
+  place-items: center;
+  width: 76px;
+  height: 76px;
+  border-radius: 50%;
+  background: #ecebf1;
+  color: var(--ink-2);
+}
+.st-edu__item.is-now .st-edu__icon {
+  background: #e7e3fd;
+  color: var(--peri);
+}
+.st-edu__body {
+  display: grid;
+  gap: 6px;
+  align-content: start;
+}
+.st-edu__when {
+  font: 500 15px / 1.4 var(--f-code), ui-monospace, monospace;
+  letter-spacing: 0.06em;
+  color: var(--ink-2);
+}
+.st-edu__t {
+  font: 400 clamp(26px, 2.4vw, 34px) / 1.14 var(--serif);
+  font-variation-settings: 'opsz' 72;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+}
+.st-edu__org {
+  font-size: 17px;
+  color: var(--ink-2);
+}
+.st-edu__item .st-tags li {
+  background: #efeef3;
+  color: var(--ink-2);
+}
+.st-edu__item.is-now .st-tags li {
+  background: #e9e6fd;
+  color: var(--peri-deep);
+}
+.st-edu__desc {
+  font-size: 15.5px;
+  line-height: 1.6;
+  color: var(--ink-3);
+}
+
+/* ── 07 Let's connect ────────────────────────────────── */
+
+.st-connect {
+  isolation: isolate;
+  overflow: clip;
+}
+.st-connect::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(30% 40% at 4% 92%, color-mix(in srgb, var(--glow-a) 40%, transparent), transparent 72%),
+    radial-gradient(34% 46% at 86% 100%, color-mix(in srgb, var(--rose) 85%, transparent), transparent 72%);
+}
+.st-connect__grid {
+  display: grid;
+  gap: 40px;
+}
+.st-connect__side {
+  position: relative;
+}
+.st-connect__h {
+  font-size: clamp(36px, 3.6vw, 54px);
+}
+/* "conversations" and "tomorrow": a gradient from the indigo to the coral (large text only). */
+.st-grad {
+  background: linear-gradient(90deg, var(--peri), #b0408a 55%, var(--c-coral));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.st-grad--light {
+  background-image: linear-gradient(90deg, #a99cff, #e48ab8 55%, #ff8a7a);
+}
+.st-connect__side .st-rule {
+  margin-top: 28px;
+}
+.st-corbits {
+  display: none;
+}
+
+/* The contact routes: soft rounded rows, each with its colour, an icon and an arrow. */
+.st-channels {
+  display: grid;
+  gap: 18px;
+  align-content: center;
+}
+.st-channel {
+  display: grid;
+  grid-template-columns: 64px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 18px;
+  padding: 16px 20px;
+  border: 1px solid var(--hair);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--surface) 70%, transparent);
+  box-shadow: 0 14px 32px -24px color-mix(in srgb, var(--peri-deep) 30%, transparent);
+  transition:
+    transform 240ms var(--ease-out, ease),
+    box-shadow 240ms var(--ease-out, ease),
+    border-color 240ms;
+}
+a.st-channel:hover {
+  transform: translateY(-3px);
+  border-color: color-mix(in srgb, var(--tone) 35%, transparent);
+  box-shadow: 0 22px 40px -24px color-mix(in srgb, var(--tone) 45%, transparent);
+}
+.st-channel__icon {
+  display: grid;
+  place-items: center;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: var(--tint);
+  color: var(--tone);
+}
+.st-channel__in {
+  font: 700 26px / 1 var(--sans);
+  letter-spacing: -0.02em;
+}
+.st-channel__body {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+.st-channel__t {
+  font-size: 19px;
+  font-weight: 600;
+  color: var(--ink);
+}
+.st-channel__p {
+  overflow-wrap: anywhere;
+  font-size: 15px;
+  color: var(--ink-3);
+}
+.st-channel__go {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: var(--tint);
+  color: var(--tone);
+  transition: transform 220ms var(--ease-out, ease);
+}
+a.st-channel:hover .st-channel__go {
+  transform: translateX(3px);
+}
+.st-channel--off {
+  box-shadow: none;
+}
+.st-channel--off .st-channel__icon {
+  opacity: 0.75;
+}
+
+@media (max-width: 480px) {
+  .st-channel {
+    grid-template-columns: 52px minmax(0, 1fr) auto;
+    gap: 14px;
+    padding: 14px 16px;
+  }
+  .st-channel__icon {
+    width: 52px;
+    height: 52px;
+  }
+  .st-channel__go {
+    width: 36px;
+    height: 36px;
+  }
+  .st-channel__p {
+    font-size: 14px;
+  }
+}
+
+/* The dark card: the page's one dark moment, kept small. White text on #17152b is 17:1. */
+.st-build {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  display: grid;
+  gap: 26px;
+  align-content: start;
+  padding: clamp(28px, 2.8vw, 42px);
+  border-radius: 26px;
+  background:
+    radial-gradient(70% 60% at 100% 0%, rgb(98 84 230 / 0.35), transparent 70%),
+    radial-gradient(60% 50% at 0% 100%, rgb(200 64 120 / 0.18), transparent 70%),
+    #17152b;
+  color: #fff;
+  box-shadow: 0 34px 60px -30px rgb(23 21 43 / 0.6);
+}
+.st-build::before,
+.st-build::after {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  border: 1px solid rgb(255 255 255 / 0.08);
+  border-radius: 50%;
+  pointer-events: none;
+}
+.st-build::before {
+  width: 360px;
+  height: 360px;
+  right: -170px;
+  top: -150px;
+}
+.st-build::after {
+  width: 520px;
+  height: 520px;
+  left: -160px;
+  bottom: -380px;
+}
+.st-build__kicker {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font: 500 14px / 1.3 var(--f-code), ui-monospace, monospace;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgb(255 255 255 / 0.86);
+}
+.st-build__kicker::before {
+  content: '';
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #7c6dff;
+}
+.st-build__h {
+  font: 400 clamp(28px, 2.6vw, 40px) / 1.1 var(--serif);
+  font-variation-settings: 'opsz' 72;
+  letter-spacing: -0.015em;
+}
+.st-build__h span {
+  display: block;
+}
+.st-build .st-rule {
+  margin-top: 0;
+}
+.st-build__btn {
+  justify-self: start;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 56px;
+  padding: 0 34px;
+  border-radius: 999px;
+  background: #fff;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--peri-deep);
+  box-shadow: 0 0 0 4px rgb(124 109 255 / 0.25), 0 16px 34px -12px rgb(124 109 255 / 0.7);
+  transition:
+    transform 220ms var(--ease-out, ease),
+    box-shadow 220ms var(--ease-out, ease);
+}
+.st-build__btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 0 6px rgb(124 109 255 / 0.3), 0 20px 40px -12px rgb(124 109 255 / 0.8);
+}
+.st-build__btn svg {
+  transition: transform 200ms;
+}
+.st-build__btn:hover svg {
+  transform: translateX(3px);
+}
+.st-build :focus-visible {
+  outline-color: #fff;
+}
+
+/* ── Footer ──────────────────────────────────────────── */
+
+.st-foot {
+  border-top: 1px solid var(--line);
+  background: var(--surface);
+}
+.st-foot__row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px 32px;
+  padding-block: 22px;
+}
+.st-foot__name {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--ink);
+}
+.st-foot__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 28px;
+}
+.st-foot__links a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  font-size: 14px;
+  color: var(--ink-2);
+}
+.st-foot__links a:hover {
+  color: var(--ink);
+}
+.st-foot__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--peri);
+}
+/* Under 720px the nav is a dock floating 16px above the bottom edge (56px tall, app/styles/nav.css):
+   the footer ends above it, with a small gap, so its links can always be reached. */
+@media (max-width: 719px) {
+  .st-foot__row {
+    padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px));
+  }
+}
+
+/* ── Wider layouts ───────────────────────────────────── */
+
+@media (min-width: 640px) {
+  .st-ventures {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .st-pillars {
+    gap: 0;
+    border-top: 1px solid var(--line);
+  }
+  .st-pillars li {
+    grid-template-columns: minmax(150px, 0.8fr) minmax(0, 1.6fr);
+    align-items: baseline;
+    gap: 6px 20px;
+    padding-block: 14px;
+    border-bottom: 1px solid var(--line);
+  }
+  .st-pillars li::before {
+    top: 19px;
+  }
+  .st-edu__card {
+    grid-template-columns: 84px minmax(0, 1fr);
+    column-gap: 28px;
+  }
+  .st-edu__desc {
+    grid-column: 2;
+  }
+}
+@media (min-width: 960px) {
+  .st-grid {
+    grid-template-columns: minmax(260px, 0.8fr) minmax(0, 2.2fr);
+    gap: 56px;
+    align-items: start;
+  }
+  /* Let's connect: heading | the routes | the dark card. */
+  .st-connect__grid {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr) minmax(0, 1fr);
+    gap: 0;
+    align-items: center;
+  }
+  .st-connect__side {
+    padding-right: 40px;
+  }
+  .st-channels {
+    padding-inline: 36px 30px;
+    border-left: 1px solid var(--line);
+  }
+  .st-build__h span {
+    white-space: nowrap;
+  }
+  .st-corbits {
+    display: block;
+    position: absolute;
+    left: calc(-1 * var(--gutter));
+    bottom: -330px;
+    width: 300px;
+    height: 300px;
+    pointer-events: none;
+  }
+  .st-corbits svg {
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+  }
+  .st-corbits circle {
+    fill: none;
+    stroke: color-mix(in srgb, var(--peri) 18%, transparent);
+    stroke-width: 1;
+    vector-effect: non-scaling-stroke;
+  }
+  .st-corbits i {
+    position: absolute;
+    left: 38%;
+    top: 34%;
+    width: 13px;
+    height: 13px;
+    border-radius: 50%;
+    background: var(--peri);
+    box-shadow: 0 0 0 7px color-mix(in srgb, var(--peri) 14%, transparent);
+  }
+  .st-about__grid {
+    grid-template-columns: minmax(0, 2.1fr) minmax(0, 2.4fr) minmax(0, 1fr);
+    gap: 0;
+  }
+  .st-about__l1,
+  .st-about__l2,
+  .st-about__l3 {
+    white-space: nowrap;
+  }
+  .st-about__mid {
+    padding-inline: 56px 40px;
+    border-left: 1px solid var(--line);
+  }
+  .st-about__side {
+    padding-left: 40px;
+    border-left: 1px solid var(--line);
+  }
+  .st-head {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr);
+    gap: 64px;
+  }
+  .st-work .st-intro {
+    align-self: center;
+    padding-left: 64px;
+    border-left: 1px solid var(--line);
+  }
+  .st-path .st-intro {
+    padding-top: 40px;
+  }
+  /* Experience rows: when | role | description, with quiet dividers. */
+  .st-xp__row {
+    grid-template-columns: 180px minmax(0, 1.15fr) minmax(0, 1fr);
+    gap: 0;
+  }
+  .st-xp__role {
+    padding-inline: 24px;
+    border-left: 1px solid var(--line);
+  }
+  .st-xp__desc {
+    padding-left: 24px;
+    border-left: 1px solid var(--line);
+  }
+  .st-orbits {
+    display: block;
+    position: relative;
+    height: 280px;
+    margin-top: 36px;
+    pointer-events: none;
+  }
+  .st-orbits svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+  }
+  .st-orbits circle {
+    fill: none;
+    stroke: color-mix(in srgb, var(--peri) 20%, transparent);
+    stroke-width: 1;
+    vector-effect: non-scaling-stroke;
+  }
+  .st-orbits i {
+    position: absolute;
+    border-radius: 50%;
+  }
+  .st-orbits__a {
+    left: 12%;
+    bottom: 12%;
+    width: 40px;
+    height: 40px;
+    background: radial-gradient(circle at 35% 30%, #8d86ff, var(--peri) 60%, #3b33c4);
+    box-shadow: 0 0 0 14px color-mix(in srgb, var(--peri) 10%, transparent);
+  }
+  .st-orbits__b {
+    left: 52%;
+    top: 40%;
+    width: 11px;
+    height: 11px;
+    background: #2fbf9f;
+    box-shadow: 0 0 0 7px color-mix(in srgb, #2fbf9f 16%, transparent);
+  }
+  .st-orbits__c {
+    left: 76%;
+    top: 18%;
+    width: 13px;
+    height: 13px;
+    background: #ef7a72;
+    box-shadow: 0 0 0 8px color-mix(in srgb, #ef7a72 16%, transparent);
+  }
+  .st-edu__card {
+    grid-template-columns: 84px minmax(0, 1.2fr) minmax(0, 1fr);
+    align-items: start;
+  }
+  .st-edu__desc {
+    grid-column: 3;
+    align-self: center;
+    padding-left: 30px;
+    border-left: 1px solid var(--line);
+  }
+}
+
+/* Wide screens: the steps hang off a drawn wave. Points are placed in the drawing's 1000 x 400
+   space as percentages (--x, --y), so the steps stay on the line at every width. */
+@media (min-width: 1100px) {
+  .st-wave {
+    height: var(--h);
+  }
+  .st-wave--work {
+    --h: 480px;
+  }
+  .st-wave--path {
+    --h: 430px;
+  }
+  .st-wave__line {
+    display: block;
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+  }
+  /* No non-scaling stroke here: with pathLength it would cut the drawn line short. */
+  .st-wave__line path {
+    fill: none;
+    stroke: color-mix(in srgb, var(--ink) 38%, transparent);
+    stroke-width: 1.3;
+  }
+  .st-wave__steps {
+    position: absolute;
+    inset: 0;
+    display: block;
+  }
+  .st-wave__steps::before {
+    display: none;
+  }
+  .st-step {
+    position: absolute;
+    left: var(--x);
+    top: var(--y);
+    display: block;
+    width: 0;
+    height: 0;
+  }
+  .st-step__dot {
+    display: block;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--tone);
+    box-shadow: 0 0 0 7px var(--tint);
+    transform: translate(-50%, -50%);
+  }
+  .st-step__num {
+    position: absolute;
+    left: 0;
+    top: calc(-1 * var(--u));
+    width: 66px;
+    height: 66px;
+    font-size: 30px;
+    transform: translate(-50%, -50%);
+  }
+  .st-step__stem {
+    display: block;
+    position: absolute;
+    left: 0;
+    top: calc(-1 * var(--u) + 36px);
+    height: max(0px, calc(var(--u) - 46px));
+    border-left: 1px dashed color-mix(in srgb, var(--tone) 55%, transparent);
+  }
+  .st-step__text {
+    position: absolute;
+    width: 280px;
+  }
+  /* How I work: up steps read beside their badge, down steps under their point. */
+  .st-wave--work .st-step--up {
+    --u: 122px;
+  }
+  .st-wave--work .st-step--up .st-step__text {
+    left: 58px;
+    top: calc(-1 * var(--u) - 32px);
+  }
+  .st-wave--work .st-step--down {
+    --u: 54px;
+  }
+  .st-wave--work .st-step--down .st-step__text {
+    left: -12px;
+    top: 34px;
+    width: 230px;
+  }
+  .st-wave__centre {
+    display: grid;
+    place-items: center;
+    position: absolute;
+    left: var(--x);
+    top: var(--y);
+    width: 140px;
+    height: 140px;
+    border: 1px solid color-mix(in srgb, var(--peri) 26%, transparent);
+    border-radius: 50%;
+    background: var(--surface);
+    box-shadow:
+      0 0 0 10px color-mix(in srgb, var(--peri) 6%, transparent),
+      0 22px 44px -24px color-mix(in srgb, var(--peri) 50%, transparent);
+    transform: translate(-50%, -50%);
+  }
+  .st-wave__centre span {
+    width: 104px;
+    font: 500 14px / 1.7 var(--f-code), ui-monospace, monospace;
+    letter-spacing: 0.16em;
+    text-align: center;
+    text-transform: uppercase;
+    color: var(--ink-2);
+  }
+  .st-wave__centre::before,
+  .st-wave__centre::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    height: 96px;
+    border-left: 1px dashed color-mix(in srgb, var(--ink) 25%, transparent);
+  }
+  .st-wave__centre::before {
+    bottom: calc(100% + 16px);
+  }
+  .st-wave__centre::after {
+    top: calc(100% + 16px);
+  }
+  /* The arrowhead at the end of the How I work line. */
+  .st-wave--work::after {
+    content: '';
+    position: absolute;
+    left: 93.5%;
+    top: 39.5%;
+    width: 14px;
+    height: 14px;
+    border-top: 1.5px solid color-mix(in srgb, var(--ink) 55%, transparent);
+    border-right: 1.5px solid color-mix(in srgb, var(--ink) 55%, transparent);
+    transform: translate(-50%, -50%) rotate(20deg);
+  }
+  /* Path: every step stands above its point, its text beside the stem. */
+  .st-wave--path .st-step:nth-child(1) {
+    --u: 205px;
+  }
+  .st-wave--path .st-step:nth-child(2) {
+    --u: 262px;
+  }
+  .st-wave--path .st-step:nth-child(3) {
+    --u: 212px;
+  }
+  .st-wave--path .st-step__num {
+    width: 62px;
+    height: 46px;
+    font-size: 23px;
+  }
+  .st-wave--path .st-step__stem {
+    top: calc(-1 * var(--u) + 26px);
+    height: calc(var(--u) - 36px);
+  }
+  .st-wave--path .st-step__dot {
+    width: 18px;
+    height: 18px;
+    box-shadow:
+      0 0 0 3px var(--canvas),
+      0 0 0 12px var(--tint);
+  }
+  .st-wave--path .st-step__text {
+    left: 48px;
+    top: calc(-1 * var(--u) + 22px);
+    width: 272px;
+  }
+  .st-wave--path .st-step__t {
+    font-size: clamp(26px, 2.2vw, 32px);
+  }
+  .st-wave--path .st-step__bar {
+    display: none;
+  }
+  .st-wave--path .st-step__p {
+    margin-top: 10px;
+  }
+  .st-wave__end {
+    display: grid;
+    place-items: center;
+    position: absolute;
+    left: var(--x);
+    top: var(--y);
+    width: 90px;
+    height: 90px;
+    border: 1px dashed color-mix(in srgb, var(--peri) 50%, transparent);
+    border-radius: 50%;
+    color: var(--peri-deep);
+    transform: translate(-50%, -50%);
+  }
+}
+
+/* ── Motion (the site only; .is-motion is set by Motion.tsx) ── */
+
+.site.is-motion .st-rule {
+  transition: transform 900ms var(--ease-out) 350ms;
+}
+.site.is-motion .st-side:not(.is-in) .st-rule {
+  transform: scaleX(0);
+}
+/* Rails draw down as their block arrives. */
+.site.is-motion :is(.st-principles, .st-xp, .st-edu)::before {
+  transition: transform 1200ms var(--ease-out) 200ms;
+}
+.site.is-motion .st-about__side:not(.is-in) .st-principles::before,
+.site.is-motion .st-xp:not(:has(.is-in))::before,
+.site.is-motion .st-edu:not(:has(.is-in))::before {
+  transform: scaleY(0);
+}
+/* The waves: one timing for the line and everything on it. The diagram is its own reveal (the
+   container does not fade). Wide screens draw the line at a constant rate (it shows progress, so
+   it moves linearly) and light each node when the stroke reaches it: --f is the share of the
+   path's length at that node (Story.tsx, reachAt). Where scroll timelines exist, scroll.css drives
+   the same steps from the scroll position instead. Narrow screens have no line: a short stagger. */
+.site.is-motion .st-wave[data-reveal] {
+  opacity: 1;
+}
+.site.is-motion .st-wave {
+  --draw: 1400ms;
+}
+.site.is-motion :is(.st-wave__line, .st-wave__vline) path {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  transition: stroke-dashoffset var(--draw) linear 200ms;
+}
+.site.is-motion .st-wave.is-in :is(.st-wave__line, .st-wave__vline) path {
+  stroke-dashoffset: 0;
+}
+.site.is-motion .st-step > * {
+  transition:
+    opacity 450ms var(--ease-out),
+    scale 450ms var(--ease-out);
+  transition-delay: calc(120ms + var(--k, 0) * 110ms);
+}
+.site.is-motion .st-wave:not(.is-in) .st-step > * {
+  opacity: 0;
+}
+.site.is-motion .st-wave:not(.is-in) .st-step__dot {
+  scale: 0;
+}
+@media (max-width: 719px) {
+  .site.is-motion .st-wave:not(.is-in) .st-step__num {
+    scale: 0.6;
+  }
+}
+.site.is-motion .st-wave__centre,
+.site.is-motion .st-wave__end,
+.site.is-motion .st-wave--work::after {
+  transition:
+    opacity 500ms var(--ease-out),
+    scale 500ms var(--ease-out);
+  transition-delay: calc(200ms + var(--f, 1) * var(--draw));
+}
+.site.is-motion .st-wave:not(.is-in) :is(.st-wave__centre, .st-wave__end),
+.site.is-motion .st-wave--work:not(.is-in)::after {
+  opacity: 0;
+  scale: 0.85;
+}
+/* Wide screens and phones have a line: each node waits for the stroke to reach it. */
+@media (min-width: 1100px), (max-width: 719px) {
+  .site.is-motion .st-step > * {
+    transition-delay: calc(200ms + var(--f, 0) * var(--draw));
+  }
+}
+/* The contact routes arrive one after another. */
+.site.is-motion .st-channels li {
+  transition: opacity 600ms var(--ease-out);
+}
+.site.is-motion .st-channels li:nth-child(2) {
+  transition-delay: 140ms;
+}
+.site.is-motion .st-channels li:nth-child(3) {
+  transition-delay: 280ms;
+}
+.site.is-motion .st-channels:not(.is-in) li {
+  opacity: 0;
+}
+/* The orbits' planets settle in. */
+.site.is-motion .st-orbits i {
+  transition:
+    opacity 900ms var(--ease-out) 600ms,
+    scale 900ms var(--ease-out) 600ms;
+}
+.site.is-motion .st-side:not(.is-in) .st-orbits i {
+  opacity: 0;
+  scale: 0.4;
+}
+@media (prefers-reduced-motion: reduce) {
+  .st-venture,
+  .st-edu__card,
+  .st-channel,
+  .st-channel__go,
+  .st-build__btn,
+  .st-build__btn svg,
+  .st-venture__link svg {
+    transition: none;
+  }
+}
+
+/* Coral on its own tint is 4.48:1, under AA for small text: coral tags take ink-2 text (7.51:1)
+   and keep coral as a dot (approved 2026-10-13; no colour value changed). */
+.st-c-coral .st-tags li {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--ink-2);
+}
+.st-c-coral .st-tags li::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--c-coral);
+}
+
+/* The Path numbers are 21-23px semibold, below "large text", so they need 4.5:1; coral on its own
+   tint is 4.48:1. The coral one takes ink-2 text on the same tint (7.51:1), as the coral tags do
+   (no colour value changed). The How I work numbers are 24px+ (large text, 3:1) and pass as they are. */
+.st-wave--path .st-c-coral .st-step__num {
+  color: var(--ink-2);
+}
+
+/* Press feedback: links and buttons give a little as they are pressed (scale, so it composes with
+   their hover lift). */
+a.st-channel,
+.st-build__btn,
+.st-venture__link {
+  transition-property: transform, box-shadow, border-color, background-color, scale;
+}
+a.st-channel:active {
+  scale: 0.985;
+}
+.st-build__btn:active,
+.st-venture__link:active {
+  scale: 0.97;
+}
+@media (prefers-reduced-motion: reduce) {
+  a.st-channel:active,
+  .st-build__btn:active,
+  .st-venture__link:active {
+    scale: none;
+  }
+}
+
+/* "Copy email" under the email route (CopyEmail.tsx): a quiet text button, shown only with
+   JavaScript. Indigo-deep on the canvas; 44px tall for touch. */
+.st-copy {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 14px;
+  padding-left: 22px;
+}
+.st-copy .st-copy__btn {
+  min-height: 44px;
+  padding: 0 4px;
+  border: 0;
+  background: none;
+  font: 500 14px / 1 var(--f-code), ui-monospace, monospace;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--peri-deep);
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, var(--peri-deep) 35%, transparent);
+  text-underline-offset: 5px;
+  cursor: pointer;
+}
+.st-copy .st-copy__btn:hover {
+  text-decoration-color: currentColor;
+}
+.st-copy .st-copy__btn:focus-visible {
+  outline: 2px solid var(--peri);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+.st-copy__note {
+  font-size: 14px;
+  line-height: 1.4;
+  color: var(--ink-2);
+}
+
+/* The closing point (Story.tsx, Contact): the hero's hairline and point once more, at the page's
+   end. Static without motion; scroll.css draws it as Contact arrives. */
+.st-bookend {
+  position: relative;
+  display: block;
+  width: 120px;
+  height: 1px;
+  margin-top: 32px;
+  background: color-mix(in srgb, var(--peri) 45%, transparent);
+  transform-origin: left;
+}
+.st-bookend i {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--peri);
+  translate: 50% -50%;
+}
+
+/* ── Phones: composed, not listed ───────────────────────
+   Under 720px the page keeps the desktop's signatures instead of collapsing into one long list:
+   the waves run down the screen, long groups become swipeable decks (Deck.tsx), short ones 2×2
+   tiles, and a soft light sits in a corner of some sections. Tablets and wider are unchanged. */
+
+/* Swipeable decks: the row scrolls sideways and snaps card by card, the next card peeking in. It
+   bleeds to the screen edges so a card can slide fully out. */
+.st-deck__dots {
+  display: flex;
+  justify-content: center;
+  gap: 2px;
+  margin-top: 14px;
+}
+.st-deck .st-deck__dot {
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: none;
+  cursor: pointer;
+}
+.st-deck__dot::before {
+  content: '';
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: #8a889c;
+  transition:
+    width 300ms var(--ease-out),
+    background-color 300ms var(--ease-out);
+}
+.st-deck__dot[aria-current='true']::before {
+  width: 20px;
+  background: var(--peri);
+}
+.st-deck .st-deck__dot:focus-visible {
+  outline: 2px solid var(--peri);
+  outline-offset: 0;
+}
+
+@media (max-width: 719px) {
+  .st-sec > .st-wrap {
+    padding-block: 92px 56px;
+  }
+  .st-about__grid {
+    gap: 40px;
+  }
+
+  /* A deck's full scroll width must never size its grid column (that would push the whole
+     section wider than the screen). */
+  :is(.st-about__grid, .st-grid, .st-ventures__main, .st-about__mid) > *,
+  .st-deck {
+    min-width: 0;
+  }
+  .st-deck__row {
+    margin-inline: calc(-1 * var(--gutter));
+    padding: 6px var(--gutter) 18px;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: var(--gutter);
+    scrollbar-width: none;
+  }
+  .st-deck__row::-webkit-scrollbar {
+    display: none;
+  }
+  /* While the row glides (Deck.tsx) snapping is off; it comes back when the glide stops. The list
+     moves by a transform then: hint the GPU. */
+  .st-deck__row.is-drifting {
+    scroll-snap-type: none;
+  }
+  .st-deck__row.is-drifting > :is(ul, ol) {
+    will-change: transform;
+  }
+  .st-deck__row:focus-visible {
+    outline: 2px solid var(--peri);
+    outline-offset: -2px;
+    border-radius: 12px;
+  }
+  .st-deck__row > :is(ul, ol) {
+    display: flex;
+    gap: 14px;
+  }
+  .st-deck__row > :is(ul, ol) > li {
+    flex: 0 0 84%;
+    scroll-snap-align: start;
+  }
+  .st-deck__dots {
+    align-items: center;
+    margin-top: 0;
+  }
+  /* The page's reveal observer never sees a card clipped off the side of its row, so once any
+     card in a deck has arrived, all of them show (still staggered by --i). */
+  .site.is-motion .st-deck:has(.is-in) [data-reveal] {
+    opacity: 1;
+  }
+
+  /* About: the three pillars as tinted cards. */
+  .st-pillars {
+    margin-top: 0;
+    border-top: 0;
+  }
+  .st-deck__row > .st-pillars > li {
+    flex-basis: 72%;
+    grid-template-columns: none;
+    align-content: start;
+    gap: 8px;
+    padding: 18px 18px 20px;
+    border: 0;
+    border-radius: 18px;
+    background: var(--tint);
+  }
+  .st-pillars li::before {
+    position: static;
+    width: 10px;
+    height: 10px;
+    margin-bottom: 4px;
+  }
+
+  /* About: the four principles, and Ventures: what he looks for, as 2×2 tinted tiles. */
+  .st-principles,
+  .st-looks__list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    padding-left: 0;
+  }
+  .st-principles::before {
+    display: none;
+  }
+  .st-principles li,
+  .st-looks__list li {
+    align-content: start;
+    gap: 6px;
+    padding: 16px 16px 18px;
+    border-radius: 18px;
+    background: var(--tint);
+  }
+  .st-principles li::before,
+  .st-looks__list li::before {
+    position: static;
+    width: 11px;
+    height: 11px;
+    margin-bottom: 6px;
+    box-shadow: none;
+  }
+  .st-principles__p,
+  .st-looks__p {
+    font-size: 15px;
+  }
+
+  /* Ventures: the two cards side by side, peeking. */
+  .st-ventures {
+    gap: 14px;
+  }
+  .st-venture {
+    padding: 26px 24px;
+  }
+
+  /* Experience: one card per role, newest first, its colour along the top. */
+  .st-xp {
+    padding-left: 0;
+  }
+  .st-xp::before {
+    display: none;
+  }
+  .st-deck__row > .st-xp > li {
+    align-content: start;
+    gap: 8px;
+    padding: 24px 22px 22px;
+    overflow: hidden;
+    border: 1px solid var(--hair);
+    border-radius: 20px;
+    background: var(--surface);
+    box-shadow: var(--shadow-soft);
+  }
+  .st-xp__row::before {
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 4px;
+    border-radius: 0;
+    box-shadow: none;
+  }
+  .st-xp__big {
+    font: 400 30px / 1.1 var(--serif);
+    font-variation-settings: 'opsz' 72;
+    letter-spacing: -0.01em;
+    color: var(--tone);
+  }
+  .st-xp__big--now {
+    justify-self: start;
+    padding: 5px 12px;
+    border-radius: 999px;
+    background: var(--tint);
+    font: 500 14px / 1.3 var(--f-code), ui-monospace, monospace;
+    letter-spacing: 0.14em;
+  }
+  .st-xp__role {
+    margin-top: 6px;
+  }
+  .st-xp__t {
+    font-size: 18px;
+  }
+
+  /* How I work, Path: the line runs down the screen in its own 88px lane at the left (Story.tsx,
+     portrait), weaving between its points, and every step's text sits to the right of the lane,
+     so the line never crosses a word. Every step is one equal row, so its point sits at the row's
+     middle. */
+  .st-step,
+  .st-wave__centre,
+  .st-wave__end {
+    --f: var(--fv);
+  }
+  .st-wave {
+    --span: 42%;
+    max-width: 520px;
+  }
+  .st-wave--path {
+    margin-bottom: 36px;
+  }
+  .st-wave__vline {
+    display: block;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 88px;
+    height: 100%;
+    overflow: visible;
+    pointer-events: none;
+  }
+  .st-wave__vline path {
+    fill: none;
+    stroke: color-mix(in srgb, var(--ink) 38%, transparent);
+    stroke-width: 0.5;
+  }
+  .st-wave__steps {
+    grid-auto-rows: 1fr;
+    gap: 0;
+  }
+  .st-wave__steps::before {
+    display: none;
+  }
+  .st-step {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 24px 0 24px 108px;
+  }
+  .st-step__num,
+  .st-wave--path .st-step__num {
+    position: absolute;
+    left: 28px;
+    top: 50%;
+    width: 56px;
+    height: 56px;
+    /* 24px: large text, so the coral number on its tint (4.48:1) meets the 3:1 it needs, as on
+       desktop. */
+    font-size: 24px;
+    translate: -50% -50%;
+    box-shadow:
+      0 0 0 5px var(--canvas),
+      0 0 0 6px color-mix(in srgb, var(--tone) 30%, transparent);
+  }
+  .st-wave--path .st-step__num {
+    height: 46px;
+    border-radius: 12px;
+    font-size: 21px;
+  }
+  .st-step:nth-child(even) .st-step__num {
+    left: 60px;
+  }
+  .st-step__t {
+    font-size: 25px;
+  }
+  .st-step__p {
+    font-size: 15.5px;
+  }
+  .st-wave__centre {
+    display: block;
+    position: absolute;
+    z-index: 1;
+    left: 0;
+    top: 50%;
+    padding: 7px 14px;
+    border: 1px solid color-mix(in srgb, var(--peri) 26%, transparent);
+    border-radius: 999px;
+    background: var(--surface);
+    box-shadow: 0 0 0 6px color-mix(in srgb, var(--peri) 6%, transparent);
+    translate: 0 -50%;
+  }
+  .st-wave__centre span {
+    display: block;
+    font: 500 12px / 1.3 var(--f-code), ui-monospace, monospace;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    color: var(--ink-2);
+  }
+  .st-wave__end {
+    display: grid;
+    place-items: center;
+    position: absolute;
+    left: 44px;
+    top: 100%;
+    width: 56px;
+    height: 56px;
+    border: 1px dashed color-mix(in srgb, var(--peri) 50%, transparent);
+    border-radius: 50%;
+    background: var(--canvas);
+    color: var(--peri-deep);
+    translate: -50% -50%;
+  }
+
+  /* A soft light in a corner of some sections, as the hero has at its edges (decorative). */
+  #about,
+  #ventures,
+  #path {
+    isolation: isolate;
+  }
+  #about::before,
+  #ventures::before,
+  #path::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+  }
+  #about::before {
+    background: radial-gradient(70% 30% at 100% 6%, color-mix(in srgb, var(--glow-a) 50%, transparent), transparent 72%);
+  }
+  #path::before {
+    background: radial-gradient(70% 34% at 0% 70%, color-mix(in srgb, var(--rose) 85%, transparent), transparent 72%);
+  }
+  #ventures::before {
+    background: radial-gradient(70% 30% at 100% 20%, color-mix(in srgb, var(--sky) 90%, transparent), transparent 72%);
+  }
+
+  /* Education: two compact cards, each a small icon beside its facts, the description under both
+     at full width. No rail: for two cards it only costs width. */
+  .st-edu {
+    gap: 14px;
+    padding-left: 0;
+  }
+  .st-edu::before,
+  .st-edu__item::before {
+    display: none;
+  }
+  .st-edu__card {
+    grid-template-columns: 44px minmax(0, 1fr);
+    column-gap: 14px;
+    row-gap: 14px;
+    padding: 18px 18px 20px;
+    border-radius: 18px;
+  }
+  .st-edu__icon {
+    width: 44px;
+    height: 44px;
+  }
+  .st-edu__icon svg {
+    width: 22px;
+    height: 22px;
+  }
+  .st-edu__body {
+    gap: 4px;
+  }
+  .st-edu__when {
+    font-size: 13px;
+  }
+  .st-edu__t {
+    font-size: 23px;
+  }
+  .st-edu__org {
+    font-size: 15.5px;
+  }
+  .st-edu__item .st-tags {
+    margin-top: 8px;
+  }
+  .st-edu__desc {
+    grid-column: 1 / -1;
+    font-size: 15px;
+    line-height: 1.55;
+  }
+}

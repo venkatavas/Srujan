@@ -1,0 +1,273 @@
+/* The live site: the preserved floating nav in the light theme, and the site's motion.
+   Scoped to .site (app/page.tsx); the review sketch at /explore/sketch/y2 stays static. */
+
+html:has(.site) {
+  color-scheme: light;
+  scroll-behavior: smooth;
+}
+/* The nav (components/nav/Nav.tsx, app/styles/nav.css, components/ui/limelight-nav.tsx) reads
+   these: the limelight, focus rings and borders take the site's colours. */
+.site {
+  --accent: var(--peri);
+  --primary: var(--peri);
+  --fg: var(--ink);
+  --mute: var(--ink-2);
+  --rule: var(--line);
+  --rule-strong: color-mix(in srgb, var(--ink) 18%, transparent);
+  --mono: var(--f-code), ui-monospace, monospace;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  min-height: 100vh;
+}
+.site .navf,
+.site .navf__dock {
+  background: color-mix(in srgb, var(--surface) 82%, transparent);
+  border-color: var(--line);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.7),
+    0 14px 34px -16px color-mix(in srgb, var(--peri-deep) 32%, transparent);
+}
+.site .navf__name {
+  font: 400 15px / 1 var(--sans);
+  letter-spacing: -0.005em;
+  text-transform: none;
+  color: var(--ink);
+}
+.site .navf__name b {
+  font-weight: 700;
+}
+.site .navf__cta {
+  font: 600 13px / 1 var(--sans);
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--peri-deep);
+  border-color: var(--edge);
+}
+.site .navf__cta:hover {
+  border-color: var(--peri);
+}
+.site [data-limelight-tip] {
+  border-color: transparent;
+  background: var(--ink);
+  color: var(--surface);
+  box-shadow: 0 8px 20px -8px rgb(20 20 40 / 0.35);
+}
+/* A nav jump lands each section exactly at the top of the screen: every section is one screen
+   tall with its content centred, and the floating pill sits over its empty top padding. */
+html:has(.site) {
+  scroll-padding-top: 0;
+}
+.site main > section {
+  scroll-margin-top: 0;
+}
+
+/* Skip link: hidden until focused, then the first thing on screen (above the preloader too). */
+.site .skip {
+  position: fixed;
+  left: 16px;
+  top: 16px;
+  z-index: 110;
+  padding: 10px 18px;
+  border-radius: 999px;
+  background: var(--ink);
+  color: var(--surface);
+  font: 600 15px / 1.2 var(--sans);
+  text-decoration: none;
+  transform: translateY(-160%);
+}
+.site .skip:focus-visible {
+  transform: none;
+}
+/* A nav jump moves focus to its section (Smooth.tsx); the section itself needs no ring. */
+.site main > section:focus {
+  outline: none;
+}
+
+/* On the site the floating nav replaces the hero's in-page pill: the hero is one centred row. */
+.site .y2-hero {
+  grid-template-rows: 1fr;
+}
+
+/* ── Motion: the hero settles once on load ───────────── */
+
+@keyframes y2-rise {
+  from {
+    opacity: 0;
+    transform: translateY(22px);
+  }
+}
+@keyframes y2-lift {
+  from {
+    transform: translateY(22px);
+  }
+}
+@keyframes y2-grow {
+  from {
+    transform: scaleX(0);
+  }
+}
+@keyframes y2-pop {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0);
+  }
+}
+@keyframes y2-drop {
+  from {
+    transform: scaleY(0);
+  }
+}
+@keyframes y2-fade {
+  from {
+    opacity: 0;
+    transform: translateX(-6px);
+  }
+}
+html[data-motion='full']:not([data-pre='on']):not([data-handoff]) .site .y2-hero .y2-eyebrow {
+  animation: y2-rise 900ms var(--ease-out) both;
+}
+/* The name and title only rise (no fade), so they are painted at once: they are the page's
+   largest paint, and a fade from transparent would delay it. */
+html[data-motion='full']:not([data-pre='on']):not([data-handoff]) .site .y2-hero .y2-name {
+  animation: y2-lift 1000ms var(--ease-out) both;
+}
+html[data-motion='full']:not([data-pre='on']):not([data-handoff]) .site .y2-hero .y2-rail {
+  transform-origin: top;
+  animation: y2-drop 1100ms var(--ease-out) 500ms both;
+}
+html[data-motion='full']:not([data-pre='on']):not([data-handoff]) .site .y2-hero .y2-rail i {
+  animation: y2-pop 600ms var(--ease-out) 1100ms both;
+}
+html[data-motion='full']:not([data-pre='on']):not([data-handoff]) .site .y2-hero .y2-title {
+  animation: y2-lift 1000ms var(--ease-out) 80ms both;
+}
+html[data-motion='full']:not([data-pre='on']):not([data-handoff]) .site .y2-hero .y2-rule {
+  animation: y2-grow 900ms var(--ease-out) 420ms both;
+}
+html[data-motion='full']:not([data-pre='on']):not([data-handoff]) .site .y2-hero .y2-rule__pt {
+  animation: y2-pop 600ms var(--ease-out) 300ms both;
+}
+html[data-motion='full']:not([data-pre='on']):not([data-handoff]) .site .y2-hero .y2-sub {
+  animation: y2-rise 1000ms var(--ease-out) 620ms both;
+}
+
+/* After the opening hands over (html[data-handoff], Preloader.tsx): the name and line are already
+   in place, drawn by the opening, so they do not move. The rest of the hero arrives in reading
+   order as the opening fades: the line above the name, the title, the supporting line, then the
+   edge rails. The title only rises (no fade): it is the page's largest paint. */
+@keyframes y2-arrive {
+  from {
+    opacity: 0;
+    translate: 0 8px;
+  }
+}
+@keyframes y2-settle {
+  from {
+    translate: 0 12px;
+  }
+}
+html[data-motion='full'][data-handoff]:not([data-pre='on']) .site .y2-hero .y2-eyebrow {
+  animation: y2-arrive 500ms var(--ease-out) 120ms both;
+}
+html[data-motion='full'][data-handoff]:not([data-pre='on']) .site .y2-hero .y2-title {
+  animation: y2-settle 700ms var(--ease-out) 60ms both;
+}
+html[data-motion='full'][data-handoff]:not([data-pre='on']) .site .y2-hero .y2-sub {
+  animation: y2-arrive 600ms var(--ease-out) 250ms both;
+}
+html[data-motion='full'][data-handoff]:not([data-pre='on']) .site .y2-hero .y2-rail {
+  transform-origin: top;
+  animation: y2-drop 900ms var(--ease-out) 350ms both;
+}
+html[data-motion='full'][data-handoff]:not([data-pre='on']) .site .y2-hero .y2-rail i {
+  animation: y2-pop 500ms var(--ease-out) 900ms both;
+}
+
+/* The page's scrollbar space is always reserved, so the hero does not shift sideways when the
+   opening unlocks scrolling (the opening's name must stay exactly on the hero's). */
+html:has(.site) {
+  scrollbar-gutter: stable;
+}
+
+/* ── Sections fade in as they enter, in order (--i) ──── */
+
+/* Secondary blocks (paragraphs, lists, cards) only fade, so a section's heading stays its one
+   primary movement (scroll.css, .st-ln). */
+.site.is-motion [data-reveal] {
+  opacity: 0;
+  transition: opacity 700ms var(--ease-out);
+  transition-delay: calc(var(--i, 0) * 70ms);
+}
+.site.is-motion [data-reveal].is-in {
+  opacity: 1;
+}
+/* A revealed card keeps its own hover lift and shadow easing alongside the fade. */
+.site.is-motion .st-venture[data-reveal] {
+  transition:
+    opacity 700ms var(--ease-out) calc(var(--i, 0) * 70ms),
+    transform 260ms var(--ease-out),
+    box-shadow 260ms var(--ease-out);
+}
+
+/* How I work: the brief's underlines draw, then their R marks appear. */
+.site.is-motion .y2-mark {
+  transition: background-size 1000ms var(--ease-out) 250ms;
+}
+.site.is-motion .y2-stage:not(.is-in) .y2-mark {
+  background-size: 0% 3px;
+}
+.site.is-motion .y2-stage:not(.is-in) .y2-mark--2 {
+  background-size:
+    0% 3px,
+    0% 2px;
+}
+.site.is-motion .y2-rid {
+  transition:
+    opacity 500ms var(--ease-out) 1000ms,
+    transform 500ms var(--ease-out) 1000ms;
+}
+.site.is-motion .y2-stage:not(.is-in) .y2-rid {
+  opacity: 0;
+  transform: translateY(4px);
+}
+
+/* The perspectives' lines join, then the decision appears. */
+.site.is-motion .y2-converge path {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  transition: stroke-dashoffset 1100ms var(--ease-out) 350ms;
+}
+.site.is-motion .y2-stage--decision.is-in .y2-converge path {
+  stroke-dashoffset: 0;
+}
+.site.is-motion .y2-decision {
+  transition:
+    opacity 700ms var(--ease-out) 1100ms,
+    transform 700ms var(--ease-out) 1100ms;
+}
+.site.is-motion .y2-stage--decision:not(.is-in) .y2-decision {
+  opacity: 0;
+  transform: translateY(8px);
+}
+
+/* Switching readers: the new panel eases in. */
+.site.is-motion .y2-readers [role='tabpanel']:not([hidden]) {
+  animation: y2-fade 320ms var(--ease-out);
+}
+
+/* Rows answer the pointer. */
+.site .y2-index li,
+.site .y2-now__row {
+  transition: background-color 200ms;
+}
+@media (hover: hover) {
+  .site .y2-index li:hover,
+  .site .y2-now__row:hover {
+    background-color: color-mix(in srgb, var(--peri-wash) 55%, transparent);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html:has(.site) {
+    scroll-behavior: auto;
+  }
+}

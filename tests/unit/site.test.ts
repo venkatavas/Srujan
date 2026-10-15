@@ -76,7 +76,7 @@ describe('no coordinates are rendered (client decision)', () => {
 })
 
 describe('the site has no images', () => {
-  const roots = ['app', 'components', 'content', 'motion', 'lib']
+  const roots = ['app', 'components', 'content', 'lib']
   const files: string[] = []
   const walk = (d: string) => {
     for (const f of readdirSync(d)) {
@@ -100,5 +100,54 @@ describe('the site has no images', () => {
       found = readdirSync('public').filter((f) => /\.(jpe?g|png|webp|avif|gif)$/i.test(f))
     } catch {}
     expect(found).toEqual([])
+  })
+})
+
+describe('the live page and its content agree', () => {
+  const story = readFileSync('components/home/Story.tsx', 'utf8')
+  const pointsIn = (name: string) => {
+    const block = story.slice(story.indexOf(`const ${name}: Point[] = [`), story.indexOf('\n]', story.indexOf(`const ${name}`)))
+    return (block.match(/\{ x:/g) ?? []).length
+  }
+
+  it('each wave timeline has exactly one drawn point per step', async () => {
+    const { page } = await import('../../content/page.ts')
+    const { valueOf } = await import('../../content/schema.ts')
+    expect(valueOf(page.work.steps)?.length).toBe(pointsIn('WORK_POINTS'))
+    expect(valueOf(page.path.items)?.length).toBe(pointsIn('PATH_POINTS'))
+  })
+
+  it('every explore-only path in the content audit still exists (no stale exclusions)', async () => {
+    const { EXPLORE_ONLY } = await import('../../lib/content/audit.ts')
+    const at = (path: string) => path.split('.').slice(1).reduce<unknown>((o, k) => (o as Record<string, unknown>)?.[k], site)
+    for (const p of EXPLORE_ONLY) expect(at(p), p).toBeDefined()
+  })
+
+  it('the nav uses the sections’ own labels', async () => {
+    const { NAV_SECTIONS } = await import('../../components/nav/sections.ts')
+    const { page } = await import('../../content/page.ts')
+    const { valueOf } = await import('../../content/schema.ts')
+    const L = valueOf(page.labels)!
+    expect(NAV_SECTIONS.find((s) => s.id === 'connect')?.label).toBe(L.connect)
+    expect(NAV_SECTIONS.find((s) => s.id === 'work')?.label).toBe(L.work)
+  })
+})
+
+describe('phone decks keep their lists', () => {
+  const story = readFileSync('components/home/Story.tsx', 'utf8')
+  it('every Deck holds exactly one list (ul or ol) and nothing else: its items are the cards', () => {
+    // The body of each <Deck ...> ... </Deck>, from the line after its opening tag.
+    const bodies = story
+      .split('<Deck ')
+      .slice(1)
+      .map((b) => b.slice(b.indexOf('\n'), b.indexOf('</Deck>')).trim())
+    expect(bodies.length).toBe(3)
+    for (const body of bodies) {
+      const tag = body.match(/^<(ul|ol)\b/)?.[1]
+      expect(tag, body.slice(0, 60)).toBeDefined()
+      // It ends with that list's closing tag, and the list is not closed (then reopened) earlier.
+      expect(body.endsWith(`</${tag}>`), body.slice(-60)).toBe(true)
+      expect(body.indexOf(`</${tag}>`), body.slice(0, 60)).toBe(body.length - `</${tag}>`.length)
+    }
   })
 })

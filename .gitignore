@@ -5,3 +5,7 @@ out
 next-env.d.ts
 .vercel
 .playwright-mcp
+
+# Local environment files (keep the example)
+.env*
+!.env.example

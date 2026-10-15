@@ -9,13 +9,13 @@
 @theme inline {
   --color-primary: var(--accent);
   --color-primary-foreground: var(--ink);
-  --color-card: #131721;
+  --color-card: #ffffff;
   --color-card-foreground: var(--fg);
   --color-foreground: var(--fg);
   --color-background: var(--ink);
   --color-muted-foreground: var(--mute);
   --color-border: var(--rule);
-  --color-secondary: #131721;
+  --color-secondary: #f2f1ee;
   --color-accent: var(--accent);
   --font-mono: var(--mono);
   --font-serif: var(--serif);

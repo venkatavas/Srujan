@@ -2,6 +2,7 @@
 // verified — confirmed by the client or a cited public source
 // draft    — wording composed from verified facts; needs client sign-off
 // pending  — CONTENT REQUIRED; rendered only outside production
+import { PUBLIC_BUILD } from '../lib/deploy.ts'
 
 export type Source = { label: string; url?: string; accessed?: string }
 
@@ -21,12 +22,16 @@ export const pending = <T = string>(note: string, requiredForLaunch = false): Fa
 const has = <T>(f: Fact<T>): f is Extract<Fact<T>, { value: T }> => f.status !== 'pending'
 export const valueOf = <T>(f: Fact<T>): T | undefined => (has(f) ? f.value : undefined)
 
-// Placeholders are visible locally and on preview deployments, never in production.
-export const SHOW_PENDING = process.env.VERCEL_ENV !== 'production'
+// Placeholders and the preview-only pages (/review, /explore) are visible in development and on
+// Vercel preview deployments, never in a public production build, wherever it is hosted.
+export const SHOW_PENDING = !PUBLIC_BUILD
 
 export const SRC = {
   client: { label: 'Provided by Sai Srujan Pasala' },
   linkedin: { label: 'LinkedIn experience, provided by the client', accessed: '2026-10-07' },
+  cv: { label: 'CV (PDF), provided by the client', accessed: '2026-10-12' },
+  // The client's reference images: the site's wording, confirmed by the client as final (2026-10-13).
+  reference: { label: 'Client reference images, provided by the client', accessed: '2026-10-12' },
   tracxnFloryn: {
     label: 'Tracxn — Floryn Health Private Limited',
     url: 'https://tracxn.com/d/legal-entities/india/floryn-health-private-limited/__c_-cUH3K8okPUoWQOz93WnVG1G7Hyq0dfcNWcBD6QPI',

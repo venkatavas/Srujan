@@ -1,0 +1,81 @@
+/* Design tokens and base for the site (Sketch Y's system, refined in Phase 1).
+   Values and their measured contrast are documented in components/explore/sketch/y.css (the
+   original sketch) and y-palettes.css (the colour studies). Root element: .sy.sy2 */
+
+.sy {
+  --canvas: #f5f4fa;
+  --surface: #ffffff;
+  --tray: #eeedf7;
+  --row: #f3f2fa;
+  --ink: #1b1a2e;
+  --ink-2: #4c4a66;
+  --ink-3: #625f7e;
+  --edge: #827fa3;
+  --hair: #e2e0ee;
+
+  --peri: #4d4ad0;
+  --peri-deep: #3532a6;
+  --peri-tint: #e8e7fc;
+  --peri-wash: #ecebfd;
+
+  --peach: #ffe7d6;
+  --peach-deep: #8f4012;
+  --peach-dot: #f4a06b;
+  --mint: #d8f3e6;
+  --mint-deep: #1b6646;
+  --mint-dot: #4fbf8c;
+  --sky: #dceafb;
+  --sky-deep: #1d5590;
+  --sky-dot: #5f9fe6;
+  --rose: #fce2eb;
+  --rose-deep: #962e57;
+  --rose-dot: #e9799f;
+  --rose-row: #fdeef3;
+  --rose-hover: #f9cfdd;
+
+  /* Soft light and the hero card's back plate (decorative, convey nothing). */
+  --glow-a: #c4c0fa;
+  --glow-b: #ffd6c4;
+  --glow-c: #c8ecdc;
+  --grad-1: #dcdafb;
+  --grad-2: #f3e3f4;
+  --grad-3: #ffe1cf;
+  --disabled: #e4e3f0;
+  --field: #fcfcff;
+
+  --shadow-soft: 0 1px 2px color-mix(in srgb, var(--peri-deep) 5%, transparent), 0 8px 24px -10px color-mix(in srgb, var(--peri-deep) 14%, transparent),
+    0 28px 56px -28px color-mix(in srgb, var(--peri-deep) 18%, transparent);
+  --shadow-lift: 0 1px 2px color-mix(in srgb, var(--peri-deep) 6%, transparent), 0 14px 32px -12px color-mix(in srgb, var(--peri-deep) 20%, transparent),
+    0 40px 72px -32px color-mix(in srgb, var(--peri-deep) 22%, transparent);
+
+  --sans: var(--f-y), system-ui, sans-serif;
+  --max: 1240px;
+  --gutter: clamp(16px, 4vw, 48px);
+  --r-surface: 28px;
+  --r-inner: 20px;
+  --ease: cubic-bezier(0.32, 0.72, 0, 1);
+
+  font-family: var(--sans);
+  font-size: 17px;
+  line-height: 1.55;
+  font-weight: 400;
+  color: var(--ink);
+  background: var(--canvas);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+.sy :focus-visible {
+  outline: 2px solid var(--peri);
+  outline-offset: 3px;
+}
+.sy b,
+.sy strong {
+  font-weight: 600;
+}
+.sy button,
+.sy input,
+.sy textarea {
+  font: inherit;
+  color: inherit;
+}

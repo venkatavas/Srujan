@@ -179,9 +179,3 @@ html[data-motion='reduce'] .navf[data-hidden] {
   }
 }
 
-/* The page now ends on Contact: leave room under it so the bottom dock never covers its end. */
-@media (max-width: 719px) {
-  main > section:last-child {
-    padding-bottom: calc(112px + env(safe-area-inset-bottom, 0px));
-  }
-}

@@ -9,7 +9,12 @@ const mock = 'Client mockup copy — Sai to approve'
 export const home = {
   // Three verified current roles (see `experience.career`): Clinisys, Floryn Health, the ventures.
   title: verified('Senior Product Manager · Director & Business Advisor · Venture Capitalist', SRC.client),
-  status: draft('Open to opportunities', mock),
+  // The approved positioning: the hero's title and supporting line (client brief, 2026-10-12).
+  // A positioning, not a job title: the verified roles stay in `title` and the career.
+  positioning: verified(
+    { title: 'Digital Health Strategist', line: 'Building the future of healthcare.' },
+    { label: 'Provided by Sai Srujan Pasala', accessed: '2026-10-12' },
+  ),
   lifecycle: ['Brief', 'Requirement', 'Stakeholders', 'Story', 'Decision'],
   // The hero's corner word stacks, from the client's reference image.
   marks: {
@@ -59,16 +64,16 @@ export const leadership = {
 export const ventures = {
   caption: 'Ideas into real-world impact',
   headline: draft('Turn insight into impact.', mock),
-  body: draft('Back and build solutions that create real value.', mock),
+  body: verified('Back and build solutions that create real value.', SRC.reference),
   // What flows into a product (from the client's reference image).
-  inputs: draft(
+  inputs: verified(
     [
       { label: 'Market insight', lines: ['Unmet needs', 'Opportunities'] },
       { label: 'Real problems', lines: ['From operators', 'and users'] },
       { label: 'Capabilities', lines: ['Technology', 'Network'] },
       { label: 'Conviction', lines: ['Long-term value', 'Real-world impact'] },
     ],
-    mock,
+    SRC.reference,
   ),
   // Company lines are sourced facts only.
   // Sai's role in each (as the client states it) and what the public record says the company is.
@@ -134,7 +139,9 @@ export const experience = {
             from: 'Jul 2022',
             to: 'Feb 2023',
             title: 'Techno Functional Consultant & Business Strategy',
-            org: 'GAIT',
+            // The full company name, from Sai's CV (SRC.cv); LinkedIn shows "GAIT". The CV gives a
+            // different title and end date (lib/content/review.ts); LinkedIn's are kept until Sai says.
+            org: 'Gait Global',
             place: 'Hyderabad, Telangana, India',
           },
         ],

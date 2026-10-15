@@ -1,0 +1,173 @@
+/* The opening (components/home/Preloader.tsx). Shown only while html[data-pre] is set by the
+   layout's boot script (full motion, home page). It reuses the hero's layout and type classes
+   (home.css: .y2-hero__core, .y2-name, .y2-rule, .y2-sub), so its name and line sit exactly on the
+   hero's; the exit is a fade over that identical hero. Colours are the site's: canvas, ink, indigo. */
+
+@property --pre-p {
+  syntax: '<integer>';
+  inherits: false;
+  initial-value: 0;
+}
+
+.pre {
+  display: none;
+}
+html[data-pre] .pre {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: block;
+  background:
+    radial-gradient(30% 44% at 2% 40%, rgb(196 192 250 / 0.55), transparent 72%),
+    radial-gradient(24% 34% at 14% 70%, rgb(255 214 196 / 0.45), transparent 72%),
+    radial-gradient(26% 40% at 99% 44%, rgb(220 234 251 / 0.85), transparent 72%),
+    radial-gradient(30% 34% at 84% 86%, rgb(252 226 235 / 0.8), transparent 72%),
+    #faf9f7;
+  /* Failsafe: never in the way for longer than 3.5s, even if the script never runs. */
+  animation: pre-hide 0s linear 3.5s forwards;
+}
+/* No scrolling under the opening (failsafe-unlocked after 3.5s too). */
+html[data-pre='on'] {
+  overflow: hidden;
+  animation: pre-unlock 0s linear 3.5s forwards;
+}
+
+/* The hero's box (home.css .y2-hero, site.css .site .y2-hero): one centred row, a screen tall. */
+.pre__hero {
+  position: relative;
+  min-height: 100svh;
+  display: grid;
+  grid-template-rows: 1fr;
+}
+/* Lines the opening does not show keep their space, so everything else lands where the hero's does. */
+.pre__ghost {
+  visibility: hidden;
+}
+
+/* The name: each word rises from behind its own mask. Words (not letters) keep the font's kerning,
+   so the risen name matches the hero's exactly. The mask (clip-path, which leaves the text baseline
+   alone) has room for the descender in "Srujan". */
+.pre__w {
+  display: inline-block;
+  clip-path: inset(-0.2em -0.15em -0.2em -0.15em);
+}
+.pre__w > span {
+  display: inline-block;
+  transform: translateY(120%);
+  animation: pre-up 780ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: calc(140ms + var(--i) * 70ms);
+}
+/* The line grows out of its point, as the hero's did. */
+.pre .pre__rule {
+  transform: scaleX(0);
+  animation: pre-grow 850ms cubic-bezier(0.16, 1, 0.3, 1) 80ms both;
+}
+.pre .pre__pt {
+  transform: translate(-50%, -50%) scale(0);
+  animation: pre-pop 600ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+/* The hero's supporting line, in its own slot, so the fade shows one line, not two crossing. */
+.pre .pre__caption {
+  opacity: 0;
+  animation: pre-fade 600ms ease 480ms both;
+}
+
+/* Counter and progress line at the foot. */
+.pre__foot {
+  position: absolute;
+  left: clamp(20px, 4vw, 56px);
+  right: clamp(20px, 4vw, 56px);
+  bottom: clamp(24px, 5vh, 44px);
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  font: 500 13px / 1 var(--f-code), ui-monospace, monospace;
+  letter-spacing: 0.12em;
+  color: #625f7e;
+}
+.pre__count {
+  min-width: 4ch;
+  counter-reset: pre var(--pre-p);
+  animation: pre-count 1200ms cubic-bezier(0.65, 0, 0.35, 1) forwards;
+}
+.pre__count::after {
+  content: counter(pre) '%';
+}
+.pre__bar {
+  position: relative;
+  flex: 1;
+  height: 1px;
+  background: rgb(27 26 46 / 0.12);
+}
+.pre__bar i {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, #4d4ad0, #b0408a, #c83c34);
+  transform: scaleX(0);
+  transform-origin: left;
+  animation: pre-bar 1200ms cubic-bezier(0.65, 0, 0.35, 1) forwards;
+}
+/* Phones: a shorter opening (Preloader.tsx ends it at 1s). */
+@media (max-width: 719px) {
+  .pre__count,
+  .pre__bar i {
+    animation-duration: 900ms;
+  }
+}
+
+/* The exit: the opening fades away over the identical hero name and line, which stay put while
+   the rest of the hero arrives (site.css, html[data-handoff]). */
+/* 450ms: the boot script (app/layout.tsx) removes data-pre when this fade ends. */
+html[data-pre='out'] .pre {
+  /* pre-hide stays in the list (matched by name, so it is not restarted): once the 3.5s failsafe
+     has hidden the opening, a late exit never brings it back. */
+  animation:
+    pre-hide 0s linear 3.5s forwards,
+    pre-out 450ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes pre-up {
+  to {
+    transform: none;
+  }
+}
+@keyframes pre-grow {
+  to {
+    transform: scaleX(1);
+  }
+}
+@keyframes pre-pop {
+  to {
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+@keyframes pre-fade {
+  to {
+    opacity: 1;
+  }
+}
+@keyframes pre-count {
+  to {
+    --pre-p: 100;
+  }
+}
+@keyframes pre-bar {
+  to {
+    transform: scaleX(1);
+  }
+}
+@keyframes pre-out {
+  to {
+    opacity: 0;
+  }
+}
+@keyframes pre-hide {
+  to {
+    visibility: hidden;
+  }
+}
+@keyframes pre-unlock {
+  to {
+    overflow: visible;
+  }
+}

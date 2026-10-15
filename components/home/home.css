@@ -1,0 +1,320 @@
+/* The site's sections (Sketch Y, refined, Phase 1), on the tokens in tokens.css; the colour
+   studies (components/explore/sketch/y-palettes.css) can override them. Scoped under .sy2. Rules:
+   - A predominantly light neutral canvas; one very faint light behind the hero only.
+   - Colour as accents: lines, underlines, R ids, tab indicators and rules. Tints only as tiny marks.
+   - One raised surface on the whole page: the contact form. No nested cards, no card grids.
+   - Bold line, then light line, is the recurring type motif. Geist Mono only for ids and dates.
+   Contrast: text tokens come from tokens.css / y-palettes.css (ink-2 >= 6.3:1, ink-3 >= 4.6:1 on every
+   canvas and tint, --peri-deep >= 7:1, white on --peri >= 5.1:1); the neutral canvas below is
+   lighter than every study's canvas, so those ratios only improve. --edge >= 3.2:1 for fields. */
+
+/* Default study ("soft"): Y's lavender canvas becomes neutral. Studies keep their own canvas. */
+.sy.sy2:not([data-palette]):not([data-palette] *) {
+  --canvas: #faf9f7;
+  --tray: #f2f1ee;
+  --row: #f6f5f2;
+}
+html:has(.sy2:not([data-palette])) {
+  background: #faf9f7;
+}
+
+.sy2 {
+  --wrap: 1120px;
+  --line: color-mix(in srgb, var(--ink) 13%, transparent);
+  --label: 600 12px / 1.3 var(--sans);
+  /* The hero's second rail colour (decorative only, never text). */
+  --teal-dot: #22b3a6;
+}
+.sy2 .sk-bar__sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.y2-wrap {
+  width: 100%;
+  max-width: calc(var(--wrap) + 2 * var(--gutter));
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+.y2-sec {
+  padding-block: clamp(72px, 10vw, 136px);
+  border-top: 1px solid var(--line);
+}
+.y2-h2 {
+  font-weight: 700;
+  font-size: clamp(32px, 4vw, 54px);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  text-wrap: balance;
+}
+.y2-h2--big {
+  font-size: clamp(40px, 5vw, 72px);
+}
+.y2-h3,
+.y2-label,
+.y2-stage__label {
+  font: var(--label);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+.y2-lede {
+  margin-top: 16px;
+  max-width: 40ch;
+  font-size: clamp(17px, 1.4vw, 20px);
+  color: var(--ink-2);
+}
+.y2-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  white-space: nowrap;
+  color: var(--peri-deep);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+.y2-link:hover {
+  text-decoration-thickness: 2px;
+}
+
+/* Meaning colours: --tone for marks and rules (decorative, always beside a label),
+   --tone-deep for any text or indicator that must be read. */
+.y2-tone-now {
+  --tone: var(--peri);
+  --tone-deep: var(--peri-deep);
+}
+.y2-tone-venture {
+  --tone: var(--rose-dot);
+  --tone-deep: var(--rose-deep);
+}
+.y2-tone-client {
+  --tone: var(--peach-dot);
+  --tone-deep: var(--peach-deep);
+}
+.y2-tone-operations {
+  --tone: var(--mint-dot);
+  --tone-deep: var(--mint-deep);
+}
+.y2-tone-finance {
+  --tone: var(--sky-dot);
+  --tone-deep: var(--sky-deep);
+}
+
+/* ── Hero: centred identity only ─────────────────────── */
+
+.y2-hero {
+  position: relative;
+  isolation: isolate;
+  min-height: 100svh;
+  display: grid;
+  grid-template-rows: auto 1fr;
+}
+.y2-hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  /* Soft light at the edges (lavender and peach left, sky and blush right) and a faint glow behind
+     the name that leans toward the pointer. Decorative; text sits on the plain canvas tone. */
+  background:
+    radial-gradient(40% 34% at calc(50% + var(--gx, 0%)) calc(46% + var(--gy, 0%)), color-mix(in srgb, var(--glow-a) 24%, transparent), transparent 70%),
+    radial-gradient(30% 44% at 2% 40%, color-mix(in srgb, var(--glow-a) 60%, transparent), transparent 72%),
+    radial-gradient(24% 34% at 13% 64%, color-mix(in srgb, var(--glow-b) 48%, transparent), transparent 72%),
+    radial-gradient(26% 40% at 99% 44%, color-mix(in srgb, var(--sky) 85%, transparent), transparent 72%),
+    radial-gradient(30% 34% at 84% 84%, color-mix(in srgb, var(--rose) 80%, transparent), transparent 72%);
+}
+
+.y2-nav {
+  justify-self: center;
+  margin: 20px var(--gutter) 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 4px 28px;
+  padding: 8px 22px;
+  border: 1px solid var(--line);
+  border-radius: 28px;
+  background: color-mix(in srgb, var(--surface) 72%, transparent);
+}
+.y2-nav__name {
+  font-weight: 600;
+  color: var(--ink);
+}
+.y2-nav__links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0 22px;
+}
+.y2-nav a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 40px;
+}
+.y2-nav__links a {
+  font-size: 15px;
+  color: var(--ink-2);
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  text-underline-offset: 6px;
+  transition: color 160ms, text-decoration-color 160ms;
+}
+.y2-nav__links a:hover {
+  color: var(--ink);
+  text-decoration-color: var(--peri);
+}
+
+.y2-hero__core {
+  align-self: center;
+  justify-self: center;
+  width: 100%;
+  max-width: calc(var(--wrap) + 2 * var(--gutter));
+  padding: 48px var(--gutter) 112px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+.y2-eyebrow {
+  margin-bottom: clamp(28px, 4vw, 56px);
+  font: 500 clamp(11px, 0.95vw, 14px) / 1.4 var(--sans);
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+.y2-eyebrow__dot {
+  margin-inline: 1.2em;
+}
+.y2-name,
+.y2-title {
+  line-height: 1.08;
+  text-wrap: balance;
+}
+.y2-name {
+  font-size: clamp(44px, 6.8vw, 116px);
+  font-weight: 700;
+  letter-spacing: -0.035em;
+  color: var(--ink);
+}
+.y2-title {
+  font-size: clamp(38px, 5.7vw, 98px);
+  font-weight: 400;
+  letter-spacing: -0.03em;
+  color: var(--ink);
+}
+.y2-title__accent {
+  color: var(--peri);
+}
+.y2-rule {
+  position: relative;
+  width: min(340px, 64%);
+  height: 1px;
+  margin: clamp(26px, 3.4vw, 44px) 0 clamp(26px, 3.2vw, 42px);
+  background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--peri) 45%, transparent) 18% 82%, transparent);
+}
+.y2-rule__pt {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  background: var(--peri);
+  box-shadow:
+    0 0 0 6px var(--canvas),
+    0 6px 18px 4px color-mix(in srgb, var(--peri) 30%, transparent);
+}
+.y2-sub {
+  font-size: clamp(19px, 2vw, 30px);
+  color: var(--ink-3);
+}
+
+/* The instrument rails at the hero's edges (wide screens only). */
+.y2-rail {
+  display: none;
+  position: absolute;
+  top: 16%;
+  width: 1px;
+  pointer-events: none;
+}
+.y2-rail i {
+  position: absolute;
+  left: 50%;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+}
+.y2-rail--l {
+  left: clamp(24px, 6vw, 112px);
+  height: 25%;
+  background: linear-gradient(to bottom, color-mix(in srgb, var(--peri) 20%, transparent), color-mix(in srgb, var(--peri) 55%, transparent));
+}
+.y2-rail--l i {
+  top: calc(30% + var(--ry, 0) * 60%);
+  background: var(--peri);
+}
+.y2-rail--r {
+  right: clamp(24px, 6vw, 112px);
+  height: 30%;
+  background: linear-gradient(to bottom, color-mix(in srgb, var(--teal-dot) 25%, transparent), color-mix(in srgb, var(--teal-dot) 55%, transparent));
+}
+.y2-rail--r i {
+  top: calc(52% - var(--ry, 0) * 60%);
+  background: var(--teal-dot);
+}
+@media (min-width: 900px) {
+  .y2-rail {
+    display: block;
+  }
+}
+@media (max-width: 480px) {
+  .y2-eyebrow {
+    letter-spacing: 0.2em;
+  }
+  .y2-eyebrow__dot {
+    margin-inline: 0.5em;
+  }
+}
+
+/* H2: title-led. The name becomes a quiet signature above a dominant title. */
+:is(.sy2[data-hero='h2'], [data-hero='h2'] .sy2) .y2-name {
+  font-size: clamp(14px, 1.3vw, 18px);
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+  margin-bottom: clamp(16px, 2vw, 28px);
+}
+:is(.sy2[data-hero='h2'], [data-hero='h2'] .sy2) .y2-title {
+  font-size: clamp(46px, 8.4vw, 136px);
+  font-weight: 700;
+  line-height: 1;
+  color: var(--ink);
+}
+
+/* H3: the name on the instrument line; title and line set beneath its point like a caption. */
+:is(.sy2[data-hero='h3'], [data-hero='h3'] .sy2) .y2-rule {
+  order: 1;
+  width: 100%;
+  margin-block: clamp(32px, 4.5vw, 56px) clamp(24px, 3vw, 36px);
+}
+:is(.sy2[data-hero='h3'], [data-hero='h3'] .sy2) .y2-title {
+  order: 2;
+  font-size: clamp(24px, 2.6vw, 38px);
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+:is(.sy2[data-hero='h3'], [data-hero='h3'] .sy2) .y2-sub {
+  order: 3;
+  margin-top: 6px;
+}

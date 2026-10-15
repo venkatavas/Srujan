@@ -1,0 +1,147 @@
+/* Sketch Y, Stage 4 colour studies. Each overrides Y's tokens; meanings stay the same
+   (peri = actions, selection and the decision; peach / mint / sky = the Client / Operations /
+   Finance readers; rose = ventures), only the colours change. Selected with data-palette on the
+   sketch root, or on any ancestor (the side-by-side page wraps each copy). The default ("soft",
+   Y as drawn) is in y.css.
+
+   Contrast (WCAG 2, computed for every study):
+     ink >= 10:1 · ink-2 >= 6.3:1 · ink-3 >= 4.6:1 on canvas, white, tray, row and every tint
+     edge >= 3.26:1 (fields, chips, outlines) · white on --peri >= 5.1:1 · --peri on canvas >= 4.9:1
+     --peri-deep on its tints >= 7:1 · each meaning's -deep on its own tint >= 4.6:1
+   -dot shades are decorative and always sit beside a text label. */
+
+/* Violet Bloom (21st.dev / tweakcn preset), adapted: near-white canvas, the preset's vivid violet
+   for actions, its orange / green / blue for the readers, an orchid for ventures. Black ink. */
+:is(.sy[data-palette='bloom'], [data-palette='bloom'] .sy) {
+  --canvas: #fbfbfe;
+  --surface: #ffffff;
+  --tray: #f3f3fa;
+  --row: #f8f8fe;
+  --ink: #0f0f14;
+  --ink-2: #525259;
+  --ink-3: #66666e;
+  --edge: #85859a;
+  --hair: #e1e1e6;
+  --peri: #7547fe;
+  --peri-deep: #5903d7;
+  --peri-tint: #e6e5ff;
+  --peri-wash: #ebebff;
+  --peach: #fee6d8;
+  --peach-deep: #a84f03;
+  --peach-dot: #fe8531;
+  --mint: #d1f6de;
+  --mint-deep: #017a48;
+  --mint-dot: #48c683;
+  --sky: #e0ecff;
+  --sky-deep: #2064d1;
+  --sky-dot: #78abfe;
+  --rose: #ffe0fb;
+  --rose-deep: #a2409c;
+  --rose-dot: #e57fdd;
+  --rose-row: #ffedfd;
+  --rose-hover: #facef4;
+  --glow-a: #cdcbff;
+  --glow-b: #ffd4bc;
+  --glow-c: #bfebce;
+  --grad-1: #dbdafe;
+  --grad-2: #e6e5fc;
+  --grad-3: #ffddca;
+  --disabled: #e1e1e5;
+  --field: #fdfdff;
+}
+
+/* Amethyst Haze (21st.dev / tweakcn preset), adapted: soft lavender canvas, a dusk purple for
+   actions (deepened: the preset's purple fails as text), peach / sage / periwinkle readers, rose
+   ventures. The softest, most lavender study. */
+:is(.sy[data-palette='haze'], [data-palette='haze'] .sy) {
+  --canvas: #f8f7fa;
+  --surface: #ffffff;
+  --tray: #f0eef5;
+  --row: #f6f4fa;
+  --ink: #3d3c4f;
+  --ink-2: #504d63;
+  --ink-3: #67647a;
+  --edge: #8480a4;
+  --hair: #e1dfef;
+  --peri: #77609e;
+  --peri-deep: #56407a;
+  --peri-tint: #ebe3ff;
+  --peri-wash: #efe9fe;
+  --peach: #fee6d4;
+  --peach-deep: #8f5d31;
+  --peach-dot: #d49e71;
+  --mint: #cbf7e6;
+  --mint-deep: #357661;
+  --mint-dot: #79bba3;
+  --sky: #e0ecfe;
+  --sky-deep: #526a8e;
+  --sky-dot: #92add4;
+  --rose: #ffe3ea;
+  --rose-deep: #915769;
+  --rose-dot: #d696a9;
+  --rose-row: #ffeff3;
+  --rose-hover: #ffcfdc;
+  --glow-a: #d8c6ff;
+  --glow-b: #ffd5b4;
+  --glow-c: #b7ecd8;
+  --grad-1: #e3d7fb;
+  --grad-2: #eae4fa;
+  --grad-3: #fedec4;
+  --disabled: #e1e0ec;
+  --field: #fdfdff;
+}
+
+/* Coastal, the study without purple: cool off-white, deep ocean blue for actions, tangerine /
+   emerald / berry readers, sunflower ventures. */
+:is(.sy[data-palette='coastal'], [data-palette='coastal'] .sy) {
+  --canvas: #f6fbfc;
+  --surface: #ffffff;
+  --tray: #e9f4f6;
+  --row: #f0f9fb;
+  --ink: #111c22;
+  --ink-2: #44545d;
+  --ink-3: #596a73;
+  --edge: #698b9b;
+  --hair: #d8e3e9;
+  --peri: #00769f;
+  --peri-deep: #005270;
+  --peri-tint: #cfedfe;
+  --peri-wash: #d9f1fe;
+  --peach: #fee5d9;
+  --peach-deep: #ac4c02;
+  --peach-dot: #fe843d;
+  --mint: #cff6e0;
+  --mint-deep: #05794f;
+  --mint-dot: #47c58c;
+  --sky: #fee3ec;
+  --sky-deep: #b53874;
+  --sky-dot: #fb78b0;
+  --rose: #fbe9c6;
+  --rose-deep: #856403;
+  --rose-dot: #d6a20a;
+  --rose-row: #fdf2dd;
+  --rose-hover: #f3dba9;
+  --glow-a: #9bdbfd;
+  --glow-b: #fed4be;
+  --glow-c: #bcebd1;
+  --grad-1: #bee5fa;
+  --grad-2: #d5ecf9;
+  --grad-3: #feddcc;
+  --disabled: #d9e3e8;
+  --field: #fdfdff;
+}
+
+html:has(.sy[data-palette='bloom']) {
+  background: #fbfbfe;
+}
+html:has(.sy[data-palette='haze']) {
+  background: #f8f7fa;
+}
+html:has(.sy[data-palette='coastal']) {
+  background: #f6fbfc;
+}
+
+/* Type option: Plus Jakarta Sans (Violet Bloom's family) instead of Outfit. */
+:is(.sy[data-type='jakarta'], [data-type='jakarta'] .sy) {
+  --sans: var(--f-pj), system-ui, sans-serif;
+}

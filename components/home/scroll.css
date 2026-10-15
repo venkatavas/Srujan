@@ -1,0 +1,258 @@
+/* The scrolling experience (the live site only). Smooth scrolling is Lenis (Smooth.tsx). Here:
+   the reading-progress line, the headings' line-by-line rise, and effects tied to the scroll
+   position itself (the waves and rails draw as you scroll and undraw as you scroll back; the hero
+   drifts away and the background light and orbits move at a slower depth). Scroll-linked effects
+   use CSS scroll-driven animations where supported and are simply absent elsewhere; all of it is
+   off under reduced motion (html[data-motion='reduce']) and without JavaScript. Only transform,
+   translate, scale, opacity and stroke-dashoffset are animated. */
+
+/* ── Reading progress: a fine line across the top, indigo to coral ── */
+
+.st-progress {
+  display: none;
+}
+html[data-motion='full'] .st-progress {
+  position: fixed;
+  inset: 0 0 auto;
+  z-index: 45;
+  display: block;
+  height: 2px;
+  pointer-events: none;
+}
+.st-progress i {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, var(--peri), #b0408a 55%, var(--c-coral));
+  transform-origin: left;
+  /* Fallback (set by Motion.tsx) where scroll timelines are not supported. */
+  transform: scaleX(var(--sp, 0));
+}
+@supports (animation-timeline: scroll()) {
+  html[data-motion='full'] .st-progress i {
+    animation: st-progress linear both;
+    animation-timeline: scroll(root block);
+  }
+}
+@keyframes st-progress {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+/* ── Headings rise line by line from behind a mask (Story.tsx, Line) ──
+   Whole lines move, so no glyph is ever shown sliced mid-word. The mask has room above and below
+   for ascenders, descenders and the serif's overhang (the padding), cancelled by equal negative
+   margins so the layout does not move. */
+
+.st-ln {
+  display: block;
+  /* Clip vertically only: a line set not to wrap (About, wide screens) can never lose its end. */
+  overflow-x: visible;
+  overflow-y: clip;
+  padding-block: 0.08em 0.18em;
+  margin-block: -0.08em -0.18em;
+}
+.st-ln > span {
+  display: block;
+}
+/* Headings set in authored lines (About, Let’s connect): the lines stack as a column, so the masks'
+   negative margins never collapse between them and the line spacing stays exactly as designed. */
+:is(.st-about__h, .st-connect__h):has(> .st-ln) {
+  display: flex;
+  flex-direction: column;
+}
+.site.is-motion .st-ln > span {
+  transition: transform 900ms var(--ease-out);
+  transition-delay: calc(120ms + var(--li, 0) * 90ms);
+}
+.site.is-motion [data-reveal]:not(.is-in) .st-ln > span {
+  transform: translateY(110%);
+}
+
+/* ── One primary movement per view ──
+   In a section's heading column the heading's lines are the movement: the column itself does not
+   fade or rise; its label and supporting line only fade in after the heading. */
+.site.is-motion .st-side[data-reveal] {
+  opacity: 1;
+}
+.site.is-motion .st-side :is(.st-label, .st-sub, .st-kicker) {
+  transition: opacity 600ms var(--ease-out) 350ms;
+}
+.site.is-motion .st-side:not(.is-in) :is(.st-label, .st-sub, .st-kicker) {
+  opacity: 0;
+}
+
+/* ── Contact closes the page ──
+   The hairline draws out to its point, then the dark card settles into place (beside the heading
+   from 960px, so it waits for the line; stacked below it on narrower screens, it settles on arrival). */
+.site.is-motion .st-side .st-bookend {
+  transition: transform 900ms var(--ease-out) 450ms;
+}
+.site.is-motion .st-side .st-bookend i {
+  transition: scale 300ms var(--ease-out) 1300ms;
+}
+.site.is-motion .st-side:not(.is-in) .st-bookend {
+  transform: scaleX(0);
+}
+.site.is-motion .st-side:not(.is-in) .st-bookend i {
+  scale: 0;
+}
+.site.is-motion .st-build[data-reveal] {
+  transition:
+    opacity 700ms var(--ease-out) var(--st-settle, 210ms),
+    translate 900ms var(--ease-out) var(--st-settle, 210ms);
+}
+.site.is-motion .st-build[data-reveal]:not(.is-in) {
+  translate: 0 12px;
+}
+/* The button settles 150ms after its card; its hover and press keep their own easing. */
+.site.is-motion .st-build[data-reveal] .st-build__btn {
+  transition:
+    translate 700ms var(--ease-out) calc(var(--st-settle, 210ms) + 150ms),
+    transform 220ms var(--ease-out),
+    box-shadow 220ms var(--ease-out),
+    scale 220ms var(--ease-out);
+}
+.site.is-motion .st-build[data-reveal]:not(.is-in) .st-build__btn {
+  translate: 0 6px;
+}
+@media (min-width: 960px) {
+  .site.is-motion .st-build[data-reveal] {
+    --st-settle: 1000ms;
+  }
+}
+
+/* ── Effects tied to the scroll position ──────────────── */
+
+@supports (animation-timeline: view()) {
+  /* The waves draw as they cross the screen and undraw on the way back, and every node (the
+     steps, the centre, the arrowhead or end circle) lights as the stroke reaches it. The line
+     draws from 20% to 52% of the diagram's pass through the screen (it starts once the diagram's
+     top third is in view, and finishes as it reaches the middle); a node at --f of the path's
+     length lights over the next 4% from 20% + --f x 32%. One driver, so scrolling fast or
+     backwards always leaves the line and its nodes in step. These rules carry their own dash
+     set-up and explicit end states, so they do not depend on Motion.tsx having run. Wide screens
+     and phones (tablets show a plain list). On phones the drawing is taller than it is wide, so the
+     line draws over a longer stretch of the pass (--span 42%): its tip stays a little below the
+     middle of the screen as you read down. */
+  @media (min-width: 1100px), (max-width: 719px) {
+    html[data-motion='full'] .site .st-wave {
+      view-timeline: --st-wave block;
+    }
+    html[data-motion='full'] .site :is(.st-wave__line, .st-wave__vline) path {
+      stroke-dasharray: 1;
+      transition: none;
+      animation: st-draw linear both;
+      animation-timeline: --st-wave;
+      animation-range: cover 20% cover calc(20% + var(--span, 32%));
+    }
+    html[data-motion='full'] .site .st-step > *,
+    html[data-motion='full'] .site .st-wave--work::after,
+    html[data-motion='full'] .site .st-wave .st-wave__end,
+    html[data-motion='full'] .site .st-wave .st-wave__centre {
+      transition: none;
+      animation: st-arrive linear both;
+      animation-timeline: --st-wave;
+      animation-range: cover calc(20% + var(--f, 1) * var(--span, 32%)) cover calc(20% + var(--f, 1) * var(--span, 32%) + 4%);
+    }
+    html[data-motion='full'] .site .st-step > :not(.st-step__dot) {
+      animation-name: st-node;
+    }
+  }
+
+  /* The Experience and Education rails draw down with the reading. */
+  html[data-motion='full'] .site :is(.st-xp, .st-edu) {
+    view-timeline: --st-rail block;
+  }
+  html[data-motion='full'] .site :is(.st-xp, .st-edu)::before {
+    transition: none;
+    animation: st-rail linear both;
+    animation-timeline: --st-rail;
+    animation-range: entry 25% cover 60%;
+  }
+
+  /* Phones keep the hero and the orbits still on scroll: less movement where the screen is small. */
+  @media (min-width: 720px) {
+    /* The hero drifts up and fades as you leave it; its light follows more slowly. */
+    html[data-motion='full'] .site .y2-hero {
+      view-timeline: --st-hero block;
+    }
+    html[data-motion='full'] .site .y2-hero .y2-hero__core {
+      animation: st-hero-out linear both;
+      animation-timeline: --st-hero;
+      animation-range: exit 0% exit 90%;
+    }
+    html[data-motion='full'] .site .y2-hero::before {
+      animation: st-hero-light linear both;
+      animation-timeline: --st-hero;
+      animation-range: exit;
+    }
+
+    /* The orbit drawings and the contact light sit at a slower depth than the text. */
+    html[data-motion='full'] .site :is(.st-orbits, .st-corbits) {
+      animation: st-depth linear both;
+      animation-timeline: view(block);
+      animation-range: cover;
+    }
+  }
+}
+
+@keyframes st-draw {
+  from {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+/* Both ends explicit, so a node's lit state never depends on its resting style. */
+@keyframes st-node {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes st-arrive {
+  from {
+    opacity: 0;
+    scale: 0.6;
+  }
+  to {
+    opacity: 1;
+    scale: 1;
+  }
+}
+@keyframes st-rail {
+  from {
+    transform: scaleY(0);
+  }
+  to {
+    transform: scaleY(1);
+  }
+}
+@keyframes st-hero-out {
+  to {
+    opacity: 0;
+    translate: 0 -14vh;
+    scale: 0.96;
+  }
+}
+@keyframes st-hero-light {
+  to {
+    translate: 0 30%;
+    opacity: 0.4;
+  }
+}
+@keyframes st-depth {
+  from {
+    translate: 0 56px;
+  }
+  to {
+    translate: 0 -56px;
+  }
+}

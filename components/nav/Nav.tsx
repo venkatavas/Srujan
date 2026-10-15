@@ -3,7 +3,7 @@
 // Floating nav: one glass pill — name · Limelight sections · Get in touch — that slips away while
 // scrolling down and returns on the way up. Under 720px the sections move to a bottom dock.
 
-import { Briefcase, Compass, Cpu, GraduationCap, Home, Mail, Rocket, Route, type LucideIcon } from 'lucide-react'
+import { Briefcase, Compass, GraduationCap, Home, Mail, Rocket, Route, User, type LucideIcon } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { LimelightNav, type NavItem } from '@/components/ui/limelight-nav.tsx'
 import { layoutTops, pageSections } from '@/lib/layout.ts'
@@ -13,18 +13,18 @@ export { NAV_SECTIONS }
 
 const ICONS: Record<NavSectionId, LucideIcon> = {
   top: Home,
-  technology: Cpu,
-  business: Briefcase,
-  leadership: Compass,
+  about: User,
+  work: Compass,
+  path: Route,
   ventures: Rocket,
-  experience: Route,
+  experience: Briefcase,
   education: GraduationCap,
-  contact: Mail,
+  connect: Mail,
 }
 
 const ITEMS: NavItem[] = NAV_SECTIONS.map(({ id, n, label }) => {
   const Icon = ICONS[id]
-  return { id, href: `#${id}`, label: `${n} ${label}`, icon: <Icon strokeWidth={1.75} /> }
+  return { id, href: `#${id}`, label: n ? `${n} ${label}` : label, icon: <Icon strokeWidth={1.75} /> }
 })
 
 const HIDE_AFTER = 120 // px of scroll before the pill may hide
@@ -47,10 +47,7 @@ export function Nav({ name, contactHref }: { name: string; contactHref: string }
     const sections = pageSections()
     let tops = layoutTops(sections)
     const root = document.documentElement
-    const pinned =
-      root.dataset.motion === 'reduce' ||
-      matchMedia('(prefers-reduced-motion: reduce)').matches ||
-      new URLSearchParams(location.search).has('seek') // screenshots stay deterministic
+    const pinned = root.dataset.motion === 'reduce' || matchMedia('(prefers-reduced-motion: reduce)').matches
     let raf = 0
     let last = scrollY
     let downFrom = scrollY
@@ -64,10 +61,15 @@ export function Nav({ name, contactHref }: { name: string; contactHref: string }
       raf = 0
       const y = scrollY
       const probe = y + 0.45 * innerHeight
-      let i = 0
-      for (let k = 0; k < tops.length; k++) if (tops[k] <= probe) i = k
-      const idx = NAV_SECTIONS.findIndex((s) => s.id === sections[i]?.id)
-      if (idx >= 0) setActive(idx)
+      // The last section whose top has passed the probe (any section without a nav item keeps
+      // the one before it lit).
+      let idx = 0
+      for (let k = 0; k < tops.length; k++) {
+        if (tops[k] > probe) break
+        const j = NAV_SECTIONS.findIndex((s) => s.id === sections[k]?.id)
+        if (j >= 0) idx = j
+      }
+      setActive(idx)
 
       if (y < HIDE_AFTER || y < last) {
         scrolledAway = false
@@ -112,7 +114,9 @@ export function Nav({ name, contactHref }: { name: string; contactHref: string }
     <>
       <header ref={headerRef} className="navf">
         <a href="#top" className="nav__name navf__name">
-          <span className="navf__full">{name}</span>
+          <span className="navf__full">
+            <b>{name.split(' ').slice(0, -1).join(' ')}</b> {name.split(' ').at(-1)}
+          </span>
           <span className="navf__short">{initials(name)}</span>
         </a>
         <span className="navf__sep" aria-hidden="true" />
