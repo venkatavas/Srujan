@@ -162,17 +162,26 @@ html[data-motion='full'] .st-progress {
       animation-name: st-node;
     }
   }
+  /* Wide screens: the line draws while the diagram comes into view and is complete once 80% of it
+     is on screen (so on a short laptop screen it finishes with the section's top), so the section's
+     heading and intro are still in view when the last step appears: with the section filling the
+     screen, everything is drawn and readable at once. Each node lights as the stroke reaches it
+     (--f of the path's length). */
+  @media (min-width: 1100px) {
+    html[data-motion='full'] .site .st-wave__line path {
+      animation-range: entry 20% entry 80%;
+    }
+    html[data-motion='full'] .site .st-step > *,
+    html[data-motion='full'] .site .st-wave--work::after,
+    html[data-motion='full'] .site .st-wave .st-wave__end,
+    html[data-motion='full'] .site .st-wave .st-wave__centre {
+      animation-range: entry calc(20% + var(--f, 1) * 60% - 3%) entry calc(20% + var(--f, 1) * 60% + 1%);
+    }
+  }
 
-  /* The Experience and Education rails draw down with the reading. */
-  html[data-motion='full'] .site :is(.st-xp, .st-edu) {
-    view-timeline: --st-rail block;
-  }
-  html[data-motion='full'] .site :is(.st-xp, .st-edu)::before {
-    transition: none;
-    animation: st-rail linear both;
-    animation-timeline: --st-rail;
-    animation-range: entry 25% cover 60%;
-  }
+  /* The Experience and Education rails are not tied to the scroll: tied to it, they finished
+     drawing only late in the section, after the rows beside them had been read. They draw down
+     once, as their list appears (story.css, the rails' transition). */
 
   /* Phones keep the hero and the orbits still on scroll: less movement where the screen is small. */
   @media (min-width: 720px) {
@@ -225,14 +234,6 @@ html[data-motion='full'] .st-progress {
   to {
     opacity: 1;
     scale: 1;
-  }
-}
-@keyframes st-rail {
-  from {
-    transform: scaleY(0);
-  }
-  to {
-    transform: scaleY(1);
   }
 }
 @keyframes st-hero-out {
