@@ -28,10 +28,10 @@ export const metadata: Metadata = {
 export const viewport: Viewport = { themeColor: '#FAF9F7' }
 
 // Runs before first paint: decides the motion mode (reduced motion, or the saved preference), so
-// the site's entrance and scroll reveals never flash. On the home page every load and refresh
-// starts at the hero: the browser's restored scroll position and any #section in the address
-// are dropped (in-page nav links still jump as usual). With full motion the home page also opens
-// with its preloader (data-pre, components/home/Preloader.tsx), on before anything is painted, once
+// the site's entrance and scroll reveals never flash. On the home page a load or refresh starts at
+// the hero (the browser's restored scroll position is dropped), unless the address names a
+// section (a shared link such as /#connect): then the opening is skipped and the page goes straight
+// to that section (html[data-hashload] keeps that jump instant; Smooth.tsx settles it). With full motion the home page also opens with its preloader (data-pre, components/home/Preloader.tsx), on before anything is painted, once
 // per browser session. A key, click, wheel or touch skips it at once, even before the page's
 // JavaScript has loaded. The exit itself lives only here (window.__ssPreEnd): it marks the handoff
 // to the hero (unless the CSS failsafe has already hidden the opening, at 3.5s), fades it over 450ms
@@ -39,11 +39,11 @@ export const viewport: Viewport = { themeColor: '#FAF9F7' }
 const boot = `(function(){var d=document.documentElement,r=false;
 try{r=matchMedia('(prefers-reduced-motion: reduce)').matches||localStorage.getItem('ss-motion')==='reduce'}catch(e){}
 d.dataset.motion=r?'reduce':'full';
-if(location.pathname==='/'){var s=false;try{s=sessionStorage.getItem('ss-pre')==='1'}catch(e){}if(!r&&!s){d.dataset.pre='on';
+if(location.pathname==='/'){var s=false,h=!!location.hash;try{s=sessionStorage.getItem('ss-pre')==='1'}catch(e){}if(!r&&!s&&!h){d.dataset.pre='on';
 var ev=['keydown','pointerdown','wheel','touchstart'],off=function(){ev.forEach(function(n){removeEventListener(n,end,true)})},
 end=function(){off();if(d.dataset.pre!=='on')return;if(performance.now()<3400)d.dataset.handoff='1';d.dataset.pre='out';try{sessionStorage.setItem('ss-pre','1')}catch(e){}
 setTimeout(function(){if(d.dataset.pre==='out')delete d.dataset.pre},450)};
-window.__ssPreEnd=end;ev.forEach(function(n){addEventListener(n,end,{capture:true,passive:true})})}try{history.scrollRestoration='manual';if(location.hash)history.replaceState(null,'',location.pathname+location.search)}catch(e){}scrollTo(0,0)}
+window.__ssPreEnd=end;ev.forEach(function(n){addEventListener(n,end,{capture:true,passive:true})})}try{history.scrollRestoration='manual'}catch(e){}if(h)d.dataset.hashload='';else scrollTo(0,0)}
 })();`
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

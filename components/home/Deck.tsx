@@ -106,198 +106,219 @@ export function Deck({ label, unit, children }: { label: string; unit: string; c
     const el = scroller.current
     const list = el?.firstElementChild as HTMLElement | null
     if (!el || !list || !canDrift) return
-    const reals = [...list.children].filter((c) => !(c as HTMLElement).dataset.clone) as HTMLElement[]
-    // The copy is made from the server-rendered cards, which never change after load.
-    const copies = reals.map((c) => {
-      const k = c.cloneNode(true) as HTMLElement
-      k.dataset.clone = ''
-      k.setAttribute('aria-hidden', 'true')
-      k.inert = true
-      list.append(k)
-      return k
-    })
-    const all = [...reals, ...copies]
-    // One set's width: where the first copy sits relative to the first real card.
-    let set = 0
-    const measure = () => (set = copies[0].offsetLeft - reals[0].offsetLeft)
-    measure()
-    const ro = new ResizeObserver(measure)
-    ro.observe(el)
-
-    let held = false // a finger, mouse or keyboard focus is on the row
-    let inView = false
-    let gliding = false
-    let resumeAt = 0
-    let off = 0 // the glide's offset, on top of the row's scroll position
-    let began = 0
-    let last = 0
-    let raf = 0
-    let timer = 0
-    let quietUntil = 0 // scroll events before this are the hand-over's own, not the visitor's
-
-    const canRun = () => inView && !held && !document.hidden && performance.now() >= resumeAt
-    const paint = () => (list.style.transform = off ? `translate3d(${-off}px, 0, 0)` : '')
-
-    const start = () => {
-      gliding = true
-      el.classList.add('is-drifting')
-      off = 0
-      began = performance.now()
-      last = 0
-      raf = requestAnimationFrame(tick)
+    // Set up (copy the cards, measure, listen) only once the row is about a screen away, so a
+    // page load never pays for rows the visitor has not reached.
+    let teardown = () => {}
+    const near = new IntersectionObserver(
+      ([e]) => {
+        if (!e.isIntersecting) return
+        near.disconnect()
+        teardown = setup()
+      },
+      { rootMargin: '100% 0px' },
+    )
+    near.observe(el)
+    return () => {
+      near.disconnect()
+      teardown()
     }
-    /** Stop gliding: hand the offset over to the row's scroll position (nothing moves). */
-    const stop = () => {
-      if (!gliding) return
-      gliding = false
-      cancelAnimationFrame(raf)
-      let at = el.scrollLeft + off
-      if (set > 0 && at >= set) at -= set
-      off = 0
-      paint()
-      quietUntil = performance.now() + 150
-      el.scrollLeft = at // snap is still off here, so this lands exactly
-      el.classList.remove('is-drifting')
-    }
-    /** Start or stop to match the current state; if only waiting, check again when the wait ends. */
-    const check = () => {
-      window.clearTimeout(timer)
-      if (canRun()) {
-        if (!gliding) start()
-        return
+
+    function setup() {
+      const el = scroller.current!
+      const list = el.firstElementChild as HTMLElement
+      const reals = [...list.children].filter((c) => !(c as HTMLElement).dataset.clone) as HTMLElement[]
+      // The copy is made from the server-rendered cards, which never change after load.
+      const copies = reals.map((c) => {
+        const k = c.cloneNode(true) as HTMLElement
+        k.dataset.clone = ''
+        k.setAttribute('aria-hidden', 'true')
+        k.inert = true
+        list.append(k)
+        return k
+      })
+      const all = [...reals, ...copies]
+      // One set's width: where the first copy sits relative to the first real card.
+      let set = 0
+      const measure = () => (set = copies[0].offsetLeft - reals[0].offsetLeft)
+      measure()
+      const ro = new ResizeObserver(measure)
+      ro.observe(el)
+
+      let held = false // a finger, mouse or keyboard focus is on the row
+      let inView = false
+      let gliding = false
+      let resumeAt = 0
+      let off = 0 // the glide's offset, on top of the row's scroll position
+      let began = 0
+      let last = 0
+      let raf = 0
+      let timer = 0
+      let quietUntil = 0 // scroll events before this are the hand-over's own, not the visitor's
+
+      const canRun = () => inView && !held && !document.hidden && performance.now() >= resumeAt
+      const paint = () => (list.style.transform = off ? `translate3d(${-off}px, 0, 0)` : '')
+
+      const start = () => {
+        gliding = true
+        el.classList.add('is-drifting')
+        off = 0
+        began = performance.now()
+        last = 0
+        raf = requestAnimationFrame(tick)
       }
-      stop()
-      const wait = resumeAt - performance.now()
-      if (wait > 0) timer = window.setTimeout(check, wait + 20)
-    }
-    function tick(t: number) {
-      if (!canRun()) return check()
-      const dt = last ? Math.min(t - last, 64) : 0
-      last = t
-      // Ease in from rest (ease-out cubic on the speed), so it never jerks into motion.
-      const k = Math.min(1, (t - began) / EASE_IN_MS)
-      off += (SPEED * (1 - (1 - k) ** 3) * dt) / 1000
-      // Step back one set on reaching the copy: identical cards, so no seam.
-      if (set > 0 && el!.scrollLeft + off >= set) off -= set
-      paint()
-      raf = requestAnimationFrame(tick)
-    }
-    /** The visitor has the row: stop now, start again RESUME_MS after they let go. */
-    const take = () => {
-      resumeAt = later()
-      check()
-    }
-    grab.current = take
+      /** Stop gliding: hand the offset over to the row's scroll position (nothing moves). */
+      const stop = () => {
+        if (!gliding) return
+        gliding = false
+        cancelAnimationFrame(raf)
+        let at = el.scrollLeft + off
+        if (set > 0 && at >= set) at -= set
+        off = 0
+        paint()
+        quietUntil = performance.now() + 150
+        el.scrollLeft = at // snap is still off here, so this lands exactly
+        el.classList.remove('is-drifting')
+      }
+      /** Start or stop to match the current state; if only waiting, check again when the wait ends. */
+      const check = () => {
+        window.clearTimeout(timer)
+        if (canRun()) {
+          if (!gliding) start()
+          return
+        }
+        stop()
+        const wait = resumeAt - performance.now()
+        if (wait > 0) timer = window.setTimeout(check, wait + 20)
+      }
+      function tick(t: number) {
+        if (!canRun()) return check()
+        const dt = last ? Math.min(t - last, 64) : 0
+        last = t
+        // Ease in from rest (ease-out cubic on the speed), so it never jerks into motion.
+        const k = Math.min(1, (t - began) / EASE_IN_MS)
+        off += (SPEED * (1 - (1 - k) ** 3) * dt) / 1000
+        // Step back one set on reaching the copy: identical cards, so no seam.
+        if (set > 0 && el!.scrollLeft + off >= set) off -= set
+        paint()
+        raf = requestAnimationFrame(tick)
+      }
+      /** The visitor has the row: stop now, start again RESUME_MS after they let go. */
+      const take = () => {
+        resumeAt = later()
+        check()
+      }
+      grab.current = take
 
-    // Touch. A finger that moves mostly up or down is scrolling the page past the row: the glide
-    // carries on. One that moves sideways, or lifts without moving (a tap), has the row.
-    let x0 = 0
-    let y0 = 0
-    let decided = false
-    const touchStart = (e: TouchEvent) => {
-      x0 = e.touches[0].clientX
-      y0 = e.touches[0].clientY
-      decided = false
-    }
-    const touchMove = (e: TouchEvent) => {
-      if (decided) return
-      const dx = Math.abs(e.touches[0].clientX - x0)
-      const dy = Math.abs(e.touches[0].clientY - y0)
-      if (dx < 6 && dy < 6) return
-      decided = true
-      if (dx > dy) {
+      // Touch. A finger that moves mostly up or down is scrolling the page past the row: the glide
+      // carries on. One that moves sideways, or lifts without moving (a tap), has the row.
+      let x0 = 0
+      let y0 = 0
+      let decided = false
+      const touchStart = (e: TouchEvent) => {
+        x0 = e.touches[0].clientX
+        y0 = e.touches[0].clientY
+        decided = false
+      }
+      const touchMove = (e: TouchEvent) => {
+        if (decided) return
+        const dx = Math.abs(e.touches[0].clientX - x0)
+        const dy = Math.abs(e.touches[0].clientY - y0)
+        if (dx < 6 && dy < 6) return
+        decided = true
+        if (dx > dy) {
+          held = true
+          take()
+        }
+      }
+      const touchEnd = (e: TouchEvent) => {
+        if (e.touches.length) return
+        if (!decided || held) {
+          held = false
+          take()
+          // A tap leaves the row where the glide had it: settle onto that card.
+          window.setTimeout(() => {
+            const card = !gliding && nearest(el, all)
+            if (card) scrollToCard(el, card, 'smooth')
+          }, 60)
+        }
+      }
+      // Mouse and pen: held until released anywhere (the press may end outside the row).
+      function pointerUp() {
+        removeEventListener('pointerup', pointerUp)
+        removeEventListener('pointercancel', pointerUp)
+        held = false
+        take()
+      }
+      const pointerDown = (e: PointerEvent) => {
+        if (e.pointerType === 'touch') return
+        held = true
+        take()
+        addEventListener('pointerup', pointerUp)
+        addEventListener('pointercancel', pointerUp)
+      }
+      // While the glide is off, any scroll of the row (a swipe's momentum, keys, find-in-page) is
+      // the visitor's: restart the wait. (The glide itself never scrolls the row.)
+      const scrolled = () => {
+        if (performance.now() < quietUntil) return
+        if (gliding) take()
+        else if (resumeAt > performance.now()) resumeAt = later()
+      }
+      // Keyboard focus holds the row while inside; a tap also focuses the row (it is focusable), but
+      // that is a touch, already handled.
+      const focusIn = (e: FocusEvent) => {
+        if (!(e.target as Element).matches(':focus-visible')) return
         held = true
         take()
       }
-    }
-    const touchEnd = (e: TouchEvent) => {
-      if (e.touches.length) return
-      if (!decided || held) {
+      const focusOut = (e: FocusEvent) => {
+        if (el.contains(e.relatedTarget as Node)) return
         held = false
         take()
-        // A tap leaves the row where the glide had it: settle onto that card.
-        window.setTimeout(() => {
-          const card = !gliding && nearest(el, all)
-          if (card) scrollToCard(el, card, 'smooth')
-        }, 60)
       }
-    }
-    // Mouse and pen: held until released anywhere (the press may end outside the row).
-    function pointerUp() {
-      removeEventListener('pointerup', pointerUp)
-      removeEventListener('pointercancel', pointerUp)
-      held = false
-      take()
-    }
-    const pointerDown = (e: PointerEvent) => {
-      if (e.pointerType === 'touch') return
-      held = true
-      take()
-      addEventListener('pointerup', pointerUp)
-      addEventListener('pointercancel', pointerUp)
-    }
-    // While the glide is off, any scroll of the row (a swipe's momentum, keys, find-in-page) is
-    // the visitor's: restart the wait. (The glide itself never scrolls the row.)
-    const scrolled = () => {
-      if (performance.now() < quietUntil) return
-      if (gliding) take()
-      else if (resumeAt > performance.now()) resumeAt = later()
-    }
-    // Keyboard focus holds the row while inside; a tap also focuses the row (it is focusable), but
-    // that is a touch, already handled.
-    const focusIn = (e: FocusEvent) => {
-      if (!(e.target as Element).matches(':focus-visible')) return
-      held = true
-      take()
-    }
-    const focusOut = (e: FocusEvent) => {
-      if (el.contains(e.relatedTarget as Node)) return
-      held = false
-      take()
-    }
-    // Glide whenever any of the row is on screen.
-    const io = new IntersectionObserver(([e]) => {
-      inView = e.isIntersecting
-      check()
-    })
+      // Glide whenever any of the row is on screen.
+      const io = new IntersectionObserver(([e]) => {
+        inView = e.isIntersecting
+        check()
+      })
 
-    el.addEventListener('touchstart', touchStart, { passive: true })
-    el.addEventListener('touchmove', touchMove, { passive: true })
-    el.addEventListener('touchend', touchEnd, { passive: true })
-    el.addEventListener('touchcancel', touchEnd, { passive: true })
-    el.addEventListener('pointerdown', pointerDown, { passive: true })
-    el.addEventListener('wheel', take, { passive: true })
-    el.addEventListener('keydown', take)
-    el.addEventListener('scroll', scrolled, { passive: true })
-    el.addEventListener('focusin', focusIn)
-    el.addEventListener('focusout', focusOut)
-    document.addEventListener('visibilitychange', check)
-    io.observe(el)
+      el.addEventListener('touchstart', touchStart, { passive: true })
+      el.addEventListener('touchmove', touchMove, { passive: true })
+      el.addEventListener('touchend', touchEnd, { passive: true })
+      el.addEventListener('touchcancel', touchEnd, { passive: true })
+      el.addEventListener('pointerdown', pointerDown, { passive: true })
+      el.addEventListener('wheel', take, { passive: true })
+      el.addEventListener('keydown', take)
+      el.addEventListener('scroll', scrolled, { passive: true })
+      el.addEventListener('focusin', focusIn)
+      el.addEventListener('focusout', focusOut)
+      document.addEventListener('visibilitychange', check)
+      io.observe(el)
 
-    return () => {
-      grab.current = () => {}
-      cancelAnimationFrame(raf)
-      window.clearTimeout(timer)
-      io.disconnect()
-      ro.disconnect()
-      el.removeEventListener('touchstart', touchStart)
-      el.removeEventListener('touchmove', touchMove)
-      el.removeEventListener('touchend', touchEnd)
-      el.removeEventListener('touchcancel', touchEnd)
-      el.removeEventListener('pointerdown', pointerDown)
-      el.removeEventListener('wheel', take)
-      el.removeEventListener('keydown', take)
-      el.removeEventListener('scroll', scrolled)
-      el.removeEventListener('focusin', focusIn)
-      el.removeEventListener('focusout', focusOut)
-      document.removeEventListener('visibilitychange', check)
-      removeEventListener('pointerup', pointerUp)
-      removeEventListener('pointercancel', pointerUp)
-      list.style.transform = ''
-      el.classList.remove('is-drifting')
-      // If the row rests on a copy, move to the same place among the real cards before removing it.
-      if (set > 0 && el.scrollLeft >= set - 1) el.scrollLeft -= set
-      copies.forEach((k) => k.remove())
+      return () => {
+        grab.current = () => {}
+        cancelAnimationFrame(raf)
+        window.clearTimeout(timer)
+        io.disconnect()
+        ro.disconnect()
+        el.removeEventListener('touchstart', touchStart)
+        el.removeEventListener('touchmove', touchMove)
+        el.removeEventListener('touchend', touchEnd)
+        el.removeEventListener('touchcancel', touchEnd)
+        el.removeEventListener('pointerdown', pointerDown)
+        el.removeEventListener('wheel', take)
+        el.removeEventListener('keydown', take)
+        el.removeEventListener('scroll', scrolled)
+        el.removeEventListener('focusin', focusIn)
+        el.removeEventListener('focusout', focusOut)
+        document.removeEventListener('visibilitychange', check)
+        removeEventListener('pointerup', pointerUp)
+        removeEventListener('pointercancel', pointerUp)
+        list.style.transform = ''
+        el.classList.remove('is-drifting')
+        // If the row rests on a copy, move to the same place among the real cards before removing it.
+        if (set > 0 && el.scrollLeft >= set - 1) el.scrollLeft -= set
+        copies.forEach((k) => k.remove())
+      }
     }
   }, [canDrift])
 

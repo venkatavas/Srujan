@@ -266,8 +266,18 @@ html:has(.site) {
   }
 }
 
+/* Reduced motion, from the OS or the site's own saved choice (html[data-motion], set by the
+   layout's boot script): jumps are instant. */
 @media (prefers-reduced-motion: reduce) {
   html:has(.site) {
     scroll-behavior: auto;
   }
+}
+html[data-motion='reduce']:has(.site) {
+  scroll-behavior: auto;
+}
+/* Arriving on a shared link to a section (/#connect): the jump there is instant, never an
+   animation that the late fonts could knock off target (Smooth.tsx removes this once settled). */
+html[data-hashload]:has(.site) {
+  scroll-behavior: auto;
 }
