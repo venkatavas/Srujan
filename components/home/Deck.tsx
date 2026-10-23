@@ -17,14 +17,13 @@
 // card, and the glide starts again RESUME_MS after the last touch. Under reduced motion it never
 // moves.
 import { type ReactNode, useEffect, useRef, useState } from 'react'
+import { reducedMotion as reduced } from '@/lib/motion.ts'
 
 const SPEED = 30 // px per second at full speed
 const EASE_IN_MS = 900
 const RESUME_MS = 4000
 const PHONE = '(max-width: 719px)'
 
-/** The layout's boot script folds the OS setting and the saved choice into html[data-motion]. */
-const reduced = () => document.documentElement.dataset.motion === 'reduce'
 /** When the glide may start again after an interaction. */
 const later = () => performance.now() + RESUME_MS
 
@@ -106,26 +105,21 @@ export function Deck({ label, unit, children }: { label: string; unit: string; c
     const el = scroller.current
     const list = el?.firstElementChild as HTMLElement | null
     if (!el || !list || !canDrift) return
-    // Set up (copy the cards, measure, listen) only once the row is about a screen away, so a
-    // page load never pays for rows the visitor has not reached.
-    let teardown = () => {}
-    const near = new IntersectionObserver(
-      ([e]) => {
-        if (!e.isIntersecting) return
-        near.disconnect()
-        teardown = setup()
-      },
-      { rootMargin: '100% 0px' },
-    )
-    near.observe(el)
+    // One observer: the first time any of the row is on screen it is set up (copy the cards,
+    // measure, listen), so a page load never pays for rows the visitor has not reached; after
+    // that it tells the glide whether the row is on screen.
+    let glide: ReturnType<typeof setup> | undefined
+    const io = new IntersectionObserver(([e]) => {
+      if (e.isIntersecting && !glide) glide = setup(el, list)
+      glide?.view(e.isIntersecting)
+    })
+    io.observe(el)
     return () => {
-      near.disconnect()
-      teardown()
+      io.disconnect()
+      glide?.teardown()
     }
 
-    function setup() {
-      const el = scroller.current!
-      const list = el.firstElementChild as HTMLElement
+    function setup(el: HTMLDivElement, list: HTMLElement) {
       const reals = [...list.children].filter((c) => !(c as HTMLElement).dataset.clone) as HTMLElement[]
       // The copy is made from the server-rendered cards, which never change after load.
       const copies = reals.map((c) => {
@@ -275,11 +269,11 @@ export function Deck({ label, unit, children }: { label: string; unit: string; c
         held = false
         take()
       }
-      // Glide whenever any of the row is on screen.
-      const io = new IntersectionObserver(([e]) => {
-        inView = e.isIntersecting
+      // Glide whenever any of the row is on screen (the effect's observer reports it).
+      const view = (on: boolean) => {
+        inView = on
         check()
-      })
+      }
 
       el.addEventListener('touchstart', touchStart, { passive: true })
       el.addEventListener('touchmove', touchMove, { passive: true })
@@ -292,13 +286,11 @@ export function Deck({ label, unit, children }: { label: string; unit: string; c
       el.addEventListener('focusin', focusIn)
       el.addEventListener('focusout', focusOut)
       document.addEventListener('visibilitychange', check)
-      io.observe(el)
 
-      return () => {
+      const teardown = () => {
         grab.current = () => {}
         cancelAnimationFrame(raf)
         window.clearTimeout(timer)
-        io.disconnect()
         ro.disconnect()
         el.removeEventListener('touchstart', touchStart)
         el.removeEventListener('touchmove', touchMove)
@@ -319,6 +311,7 @@ export function Deck({ label, unit, children }: { label: string; unit: string; c
         if (set > 0 && el.scrollLeft >= set - 1) el.scrollLeft -= set
         copies.forEach((k) => k.remove())
       }
+      return { view, teardown }
     }
   }, [canDrift])
 

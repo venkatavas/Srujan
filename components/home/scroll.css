@@ -129,15 +129,15 @@ html[data-motion='full'] .st-progress {
 
 @supports (animation-timeline: view()) {
   /* The waves draw as they cross the screen and undraw on the way back, and every node (the
-     steps, the centre, the arrowhead or end circle) lights as the stroke reaches it. The line
-     draws from 20% to 52% of the diagram's pass through the screen (it starts once the diagram's
-     top third is in view, and finishes as it reaches the middle); a node at --f of the path's
-     length lights over the next 4% from 20% + --f x 32%. One driver, so scrolling fast or
-     backwards always leaves the line and its nodes in step. These rules carry their own dash
-     set-up and explicit end states, so they do not depend on Motion.tsx having run. Wide screens
-     and phones (tablets show a plain list). On phones the drawing is taller than it is wide, so the
-     line draws over a longer stretch of the pass (--span 42%): its tip stays a little below the
-     middle of the screen as you read down. */
+     steps, the centre, the arrowhead or end circle) lights as the stroke reaches it: a node at --f
+     of the path's length lights over the next 4% of the line's range. One driver, so scrolling
+     fast or backwards always leaves the line and its nodes in step. These rules carry their own
+     dash set-up and explicit end states, so they do not depend on Motion.tsx having run. Phones
+     (and the shared set-up below): the line draws from cover 20% to cover 20% + --span (42%) of
+     the diagram's pass through the screen, so its tip stays a little below the middle of the
+     screen as you read down. Wide screens override the range (the block after this one): the
+     line draws while the diagram enters and is complete once 80% of it is on screen. Tablets
+     show a plain list. */
   @media (min-width: 1100px), (max-width: 719px) {
     html[data-motion='full'] .site .st-wave {
       view-timeline: --st-wave block;
@@ -175,7 +175,7 @@ html[data-motion='full'] .st-progress {
     html[data-motion='full'] .site .st-wave--work::after,
     html[data-motion='full'] .site .st-wave .st-wave__end,
     html[data-motion='full'] .site .st-wave .st-wave__centre {
-      animation-range: entry calc(20% + var(--f, 1) * 60% - 3%) entry calc(20% + var(--f, 1) * 60% + 1%);
+      animation-range: entry calc(20% + var(--f, 1) * 60%) entry calc(20% + var(--f, 1) * 60% + 4%);
     }
   }
 

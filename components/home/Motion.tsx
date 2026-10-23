@@ -6,14 +6,13 @@
 // its own. Under reduced motion (html[data-motion='reduce'], set before paint by the layout) and
 // without JavaScript, everything is simply shown.
 import { useEffect } from 'react'
+import { reducedMotion } from '@/lib/motion.ts'
 
 export function Motion() {
   useEffect(() => {
     const root = document.querySelector<HTMLElement>('.site')
     if (!root) return
-    const reduce =
-      document.documentElement.dataset.motion === 'reduce' || matchMedia('(prefers-reduced-motion: reduce)').matches
-    if (reduce) return
+    if (reducedMotion()) return
     root.classList.add('is-motion')
 
     const io = new IntersectionObserver(

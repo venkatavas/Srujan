@@ -7,6 +7,7 @@ import { Briefcase, Compass, GraduationCap, Home, Mail, Rocket, Route, User, typ
 import { useEffect, useRef, useState } from 'react'
 import { LimelightNav, type NavItem } from '@/components/ui/limelight-nav.tsx'
 import { layoutTops, pageSections } from '@/lib/layout.ts'
+import { reducedMotion } from '@/lib/motion.ts'
 import { NAV_SECTIONS, type NavSectionId } from './sections.ts'
 
 export { NAV_SECTIONS }
@@ -46,8 +47,7 @@ export function Nav({ name, contactHref }: { name: string; contactHref: string }
   useEffect(() => {
     const sections = pageSections()
     let tops = layoutTops(sections)
-    const root = document.documentElement
-    const pinned = root.dataset.motion === 'reduce' || matchMedia('(prefers-reduced-motion: reduce)').matches
+    const pinned = reducedMotion()
     let raf = 0
     let last = scrollY
     let downFrom = scrollY
