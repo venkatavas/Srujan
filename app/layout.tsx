@@ -1,28 +1,31 @@
 import type { Metadata, Viewport } from 'next'
 import { Newsreader } from 'next/font/google'
-import { name as givenName, summary } from '@/content/live.ts'
+import { name as givenName, positioning, summary } from '@/content/live.ts'
 import { SITE_URL } from '@/lib/site-url.ts'
 import './styles/tailwind.css'
 import './globals.css'
 import './styles/nav.css'
 
 // Newsreader for the section headings. The home page adds Outfit and Geist Mono
-// (components/home/fonts.ts); the preview-only /explore pages load their own (app/explore/layout.tsx).
+// (components/home/fonts.ts).
 // Not preloaded: it is first needed below the hero, so the hero's own font (Outfit) arrives first.
 const serif = Newsreader({ subsets: ['latin'], axes: ['opsz'], variable: '--f-serif', preload: false })
 
 // The description and share text come from the verified name and positioning, like the hero.
 const name = givenName || 'Sai Srujan Pasala'
+// "Sai Srujan Pasala · Digital Health Strategist": the name and the approved positioning, so the
+// browser tab, search results and share cards say who and what at once.
+const title = positioning?.title ? `${name} · ${positioning.title}` : name
 const description = summary
 
 // The share preview image comes from app/opengraph-image.tsx. Its absolute URL and the canonical
 // link (app/page.tsx) use the site's address (lib/site-url.ts: NEXT_PUBLIC_SITE_URL, or the Vercel domain).
 export const metadata: Metadata = {
   ...(SITE_URL ? { metadataBase: new URL(SITE_URL) } : {}),
-  title: name,
+  title,
   description,
-  openGraph: { type: 'website', title: name, description, siteName: name },
-  twitter: { card: 'summary_large_image', title: name, description },
+  openGraph: { type: 'website', title, description, siteName: name, locale: 'en_US' },
+  twitter: { card: 'summary_large_image', title, description },
 }
 
 export const viewport: Viewport = { themeColor: '#FAF9F7' }

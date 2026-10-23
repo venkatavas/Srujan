@@ -22,7 +22,7 @@ export const pending = <T = string>(note: string, requiredForLaunch = false): Fa
 const has = <T>(f: Fact<T>): f is Extract<Fact<T>, { value: T }> => f.status !== 'pending'
 export const valueOf = <T>(f: Fact<T>): T | undefined => (has(f) ? f.value : undefined)
 
-// Placeholders and the preview-only pages (/review, /explore) are visible in development and on
+// Placeholders and the preview-only /review page are visible in development and on
 // Vercel preview deployments, never in a public production build, wherever it is hosted.
 export const SHOW_PENDING = !PUBLIC_BUILD
 

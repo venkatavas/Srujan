@@ -1,6 +1,5 @@
-// Honesty markers for content awaiting approval, on the live site and the /explore sketches.
-// Drafts look like normal copy until the review bar's "Show drafts" is on (html[data-drafts]);
-// missing content is always visible.
+// Honesty markers for content awaiting approval. A draft renders as normal copy (wrapped, so it
+// can be found); missing content is always visible.
 import type { ReactNode } from 'react'
 import type { Fact } from '@/content/schema.ts'
 

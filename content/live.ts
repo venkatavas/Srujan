@@ -1,8 +1,7 @@
 // The values the live site derives from the content model, in one place: the home page, the root
 // layout (metadata), the share image and the JSON-LD all read the same name and positioning from
 // here, so they can never disagree. Nothing here adds a fact: dates and organisations are taken
-// from the verified career as given. The preview-only /explore workspace builds on this module;
-// this module never depends on it.
+// from the verified career as given.
 import { profile } from './profile.ts'
 import { valueOf } from './schema.ts'
 import * as site from './site.ts'

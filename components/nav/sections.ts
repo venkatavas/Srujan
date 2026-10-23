@@ -18,15 +18,3 @@ export const NAV_SECTIONS = [
 ] as const
 
 export type NavSectionId = (typeof NAV_SECTIONS)[number]['id']
-
-/** The dark build's eight sections: still drawn by the /explore wireframes and the control sketch. */
-export const LEGACY_SECTIONS = [
-  { id: 'top', n: '01', label: 'Home' },
-  { id: 'technology', n: '02', label: 'Technology' },
-  { id: 'business', n: '03', label: 'Business' },
-  { id: 'leadership', n: '04', label: 'Leadership' },
-  { id: 'ventures', n: '05', label: 'Ventures' },
-  { id: 'experience', n: '06', label: 'Experience' },
-  { id: 'education', n: '07', label: 'Education' },
-  { id: 'contact', n: '08', label: 'Contact' },
-] as const

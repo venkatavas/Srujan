@@ -14,7 +14,7 @@ export type Detail = { tags: string[]; text?: string }
 
 export const page = {
   // The line above the name in the hero (client's hero reference).
-  hero: { focus: given(['Healthcare', 'Product', 'Strategy']) },
+  hero: { focus: given(['Venture Capitalist', 'Product', 'Strategy']) },
   labels: given({
     about: 'About',
     perspective: 'My perspective',

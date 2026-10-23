@@ -46,10 +46,9 @@ Calm and purposeful (`components/home/Motion.tsx`, `site.css`, `story.css`, `scr
 ## Content rules
 
 - Every fact comes from `content/profile.ts` and `content/site.ts`, verified with a source. New wording lives in `content/page.ts` as **drafts**: the production build is blocked until Sai approves them (`npm run check-content`, `/review`).
-- Open questions and conflicts between reference images and the record: `lib/content/review.ts`, listed on `/explore`.
+- Open questions and conflicts between reference images and the record: `lib/content/review.ts`, listed on `/review`.
 - No images of any kind: type, CSS and inline SVG only.
 
 ## Tools
 
-- `/explore` (preview only): the exploration, sketches and colour studies.
 - `npm run shoot`: section screenshots at desktop and phone size. `npm run fps`: frame-time probe.

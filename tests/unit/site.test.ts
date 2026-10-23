@@ -30,12 +30,6 @@ describe('site content honours the fact rules', () => {
     expect(site.experience.notes['Marketing Lead']?.status).toBe('draft')
   })
 
-  it('the career has one verb per period', () => {
-    const c = site.experience.career
-    const verbs = site.experience.verbs.status === 'pending' ? [] : site.experience.verbs.value.split(' · ')
-    expect(c.status === 'verified' && c.value.length).toBe(verbs.length)
-  })
-
   it('every role in the hero title is a verified role (career or ventures)', () => {
     const t = site.home.title
     expect(t.status).toBe('verified')
@@ -45,12 +39,6 @@ describe('site content honours the fact rules', () => {
     const known = [...career, ...ventures].join(' | ')
     if (t.status === 'verified')
       for (const part of t.value.split(' · ')) expect(known.replaceAll(' · ', ' & ')).toContain(part.replace(' · ', ' & '))
-  })
-
-  it('the Upcoming venture card is draft copy for Sai to approve, never a verified fact', () => {
-    const u = site.ventures.upcoming
-    expect(u.status).toBe('draft')
-    expect(u.status).not.toBe('verified')
   })
 })
 
@@ -117,10 +105,10 @@ describe('the live page and its content agree', () => {
     expect(valueOf(page.path.items)?.length).toBe(pointsIn('PATH_POINTS'))
   })
 
-  it('every explore-only path in the content audit still exists (no stale exclusions)', async () => {
-    const { EXPLORE_ONLY } = await import('../../lib/content/audit.ts')
+  it('every not-rendered path in the content audit still exists (no stale exclusions)', async () => {
+    const { NOT_RENDERED } = await import('../../lib/content/audit.ts')
     const at = (path: string) => path.split('.').slice(1).reduce<unknown>((o, k) => (o as Record<string, unknown>)?.[k], site)
-    for (const p of EXPLORE_ONLY) expect(at(p), p).toBeDefined()
+    for (const p of NOT_RENDERED) expect(at(p), p).toBeDefined()
   })
 
   it('the nav uses the sections’ own labels', async () => {

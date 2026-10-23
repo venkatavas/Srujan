@@ -1,7 +1,7 @@
 // The site's public address, used wherever an absolute URL is required: the share image,
 // the canonical link, robots.txt, the sitemap and the structured data.
-// Set NEXT_PUBLIC_SITE_URL for production (e.g. https://example.com). On Vercel, the project's
-// production domain is used when it is not set. Without either, or if the value is not a valid
+// Set NEXT_PUBLIC_SITE_URL for production (e.g. https://example.com). Without it, the host's own
+// production address is used: Vercel's project domain, or Netlify's site URL. Without either, or if the value is not a valid
 // http(s) address, absolute-URL features are left out rather than pointing at a wrong host (and a
 // typo in the setting can never break the build or a page).
 function normalise(value: string | undefined): string | undefined {
@@ -17,4 +17,7 @@ function normalise(value: string | undefined): string | undefined {
 }
 
 export const SITE_URL: string | undefined =
-  normalise(process.env.NEXT_PUBLIC_SITE_URL) ?? normalise(process.env.VERCEL_PROJECT_PRODUCTION_URL)
+  normalise(process.env.NEXT_PUBLIC_SITE_URL) ??
+  normalise(process.env.VERCEL_PROJECT_PRODUCTION_URL) ??
+  // Netlify: the site's main address (URL), set on every Netlify build.
+  normalise(process.env.NETLIFY === 'true' ? process.env.URL : undefined)

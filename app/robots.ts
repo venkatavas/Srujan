@@ -5,7 +5,7 @@ import { SITE_URL } from '@/lib/site-url.ts'
 // production builds and carry noindex).
 export default function robots(): MetadataRoute.Robots {
   return {
-    rules: { userAgent: '*', allow: '/', disallow: ['/review', '/explore'] },
+    rules: { userAgent: '*', allow: '/', disallow: ['/review'] },
     ...(SITE_URL ? { sitemap: `${SITE_URL}/sitemap.xml` } : {}),
   }
 }

@@ -1,14 +1,14 @@
-/* The site's sections (Sketch Y, refined, Phase 1), on the tokens in tokens.css; the colour
-   studies (components/explore/sketch/y-palettes.css) can override them. Scoped under .sy2. Rules:
+/* The hero and shared base styles (the approved Sketch Y, refined), on the tokens in tokens.css.
+   Scoped under .sy2. Rules:
    - A predominantly light neutral canvas; one very faint light behind the hero only.
    - Colour as accents: lines, underlines, R ids, tab indicators and rules. Tints only as tiny marks.
    - One raised surface on the whole page: the contact form. No nested cards, no card grids.
    - Bold line, then light line, is the recurring type motif. Geist Mono only for ids and dates.
-   Contrast: text tokens come from tokens.css / y-palettes.css (ink-2 >= 6.3:1, ink-3 >= 4.6:1 on every
-   canvas and tint, --peri-deep >= 7:1, white on --peri >= 5.1:1); the neutral canvas below is
-   lighter than every study's canvas, so those ratios only improve. --edge >= 3.2:1 for fields. */
+   Contrast: text tokens come from tokens.css (ink-2 >= 6.3:1, ink-3 >= 4.6:1 on every canvas and
+   tint, --peri-deep >= 7:1, white on --peri >= 5.1:1); the neutral canvas below is lighter than
+   the tokens' own canvas, so those ratios only improve. --edge >= 3.2:1 for fields. */
 
-/* Default study ("soft"): Y's lavender canvas becomes neutral. Studies keep their own canvas. */
+/* The site's neutral canvas (the tokens' lavender canvas, made neutral). */
 .sy.sy2:not([data-palette]):not([data-palette] *) {
   --canvas: #faf9f7;
   --tray: #f2f1ee;
@@ -285,36 +285,13 @@ html:has(.sy2:not([data-palette])) {
     margin-inline: 0.5em;
   }
 }
-
-/* H2: title-led. The name becomes a quiet signature above a dominant title. */
-:is(.sy2[data-hero='h2'], [data-hero='h2'] .sy2) .y2-name {
-  font-size: clamp(14px, 1.3vw, 18px);
-  font-weight: 600;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--ink-2);
-  margin-bottom: clamp(16px, 2vw, 28px);
-}
-:is(.sy2[data-hero='h2'], [data-hero='h2'] .sy2) .y2-title {
-  font-size: clamp(46px, 8.4vw, 136px);
-  font-weight: 700;
-  line-height: 1;
-  color: var(--ink);
-}
-
-/* H3: the name on the instrument line; title and line set beneath its point like a caption. */
-:is(.sy2[data-hero='h3'], [data-hero='h3'] .sy2) .y2-rule {
-  order: 1;
-  width: 100%;
-  margin-block: clamp(32px, 4.5vw, 56px) clamp(24px, 3vw, 36px);
-}
-:is(.sy2[data-hero='h3'], [data-hero='h3'] .sy2) .y2-title {
-  order: 2;
-  font-size: clamp(24px, 2.6vw, 38px);
-  font-weight: 500;
-  letter-spacing: -0.01em;
-}
-:is(.sy2[data-hero='h3'], [data-hero='h3'] .sy2) .y2-sub {
-  order: 3;
-  margin-top: 6px;
+/* The smallest phones: a little tighter, so the line stays on one row (no separator left
+   hanging at a line's end). The opening's placeholder uses the same classes, so it matches. */
+@media (max-width: 360px) {
+  .y2-eyebrow {
+    letter-spacing: 0.09em;
+  }
+  .y2-eyebrow__dot {
+    margin-inline: 0.25em;
+  }
 }

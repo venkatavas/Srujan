@@ -1,5 +1,5 @@
 /* The live site: the preserved floating nav in the light theme, and the site's motion.
-   Scoped to .site (app/page.tsx); the review sketch at /explore/sketch/y2 stays static. */
+   Scoped to .site (app/page.tsx). */
 
 html:has(.site) {
   color-scheme: light;

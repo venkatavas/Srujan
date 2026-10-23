@@ -14,7 +14,7 @@ import { SITE_URL } from '@/lib/site-url.ts'
 import '@/components/home/scroll.css'
 import type { Metadata } from 'next'
 
-// The home page is the canonical address; other routes (review, explore, 404) do not inherit it.
+// The home page is the canonical address; other routes (/review, 404) do not inherit it.
 export const metadata: Metadata = SITE_URL ? { alternates: { canonical: '/' } } : {}
 
 // The site: the approved hero (Sketch Y, refined) and the sections from the client's full-page

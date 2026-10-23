@@ -1,6 +1,6 @@
-/* Design tokens and base for the site (Sketch Y's system, refined in Phase 1).
-   Values and their measured contrast are documented in components/explore/sketch/y.css (the
-   original sketch) and y-palettes.css (the colour studies). Root element: .sy.sy2 */
+/* Design tokens and base for the site (Sketch Y's system, refined in Phase 1). Text colours are
+   chosen for WCAG AA contrast on the canvas and their tints (see the ratios noted in home.css and
+   story.css). Root element: .sy.sy2 */
 
 .sy {
   --canvas: #f5f4fa;

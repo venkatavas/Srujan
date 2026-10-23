@@ -1,5 +1,5 @@
 // Facts to confirm with Sai: gaps, conflicts and wording questions about what the live site
-// shows. Listed on /review (for Sai) and /explore, never on the page itself. Nothing here is
+// shows. Listed on /review (for Sai), never on the page itself. Nothing here is
 // resolved by guessing: each item waits for Sai's answer. Draft wording is listed separately on
 // /review (from lib/content/audit.ts), so it is not repeated here.
 
